@@ -11,6 +11,9 @@ import java.util.Set;
 public class BuildingEntity extends AbstractEntity {
     private static final long serialVersionUID = 1L;
 
+    @Version
+    private int version;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "BUILDING_ID")
@@ -31,11 +34,15 @@ public class BuildingEntity extends AbstractEntity {
     @Column(nullable = false)
     int apartmentNo;
 
-    @OneToMany(mappedBy = "BUILDING", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "buildingEntity", cascade = CascadeType.REMOVE)
     Set<ApartmentEntity> listOfApartments = new HashSet<>();
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public Long getId() {

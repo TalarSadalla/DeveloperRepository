@@ -9,20 +9,26 @@ import java.util.Set;
 
 public class BuildingTO {
 
+    private int version;
     private Long id;
-    String description;
-    String localization;
-    int floorNo;
-    boolean isElevator;
-    int apartmentNo;
+    private String description;
+    private String localization;
+    private int floorNo;
+    private boolean isElevator;
+    private int apartmentNo;
 
-    public BuildingTO(Long id, String description, String localization, int floorNo, boolean isElevator, int apartmentNo) {
+    public BuildingTO(int version, Long id, String description, String localization, int floorNo, boolean isElevator, int apartmentNo) {
+        this.version = version;
         this.id = id;
         this.description = description;
         this.localization = localization;
         this.floorNo = floorNo;
         this.isElevator = isElevator;
         this.apartmentNo = apartmentNo;
+    }
+
+    public int getVersion() {
+        return version;
     }
 
     public Long getId() {
@@ -55,6 +61,7 @@ public class BuildingTO {
 
     public static class BuildingTOBuilder {
 
+        private int version;
         private Long id;
         String description;
         String localization;
@@ -96,13 +103,18 @@ public class BuildingTO {
             return this;
         }
 
+        public BuildingTOBuilder withId(int version) {
+            this.version = version;
+            return this;
+        }
+
         public BuildingTO build() {
             checkBeforeBuild(description, localization, floorNo, isElevator, apartmentNo);
-            return new BuildingTO(id, description, localization, floorNo, isElevator, apartmentNo);
+            return new BuildingTO(version, id, description, localization, floorNo, isElevator, apartmentNo);
         }
 
         private void checkBeforeBuild(String description, String localization, int floorNo, boolean isElevator, int apartmentNo) {
-            if (description == null || description.isEmpty() || localization == null || localization.isEmpty() || floorNo<0 || floorNo>50 || apartmentNo<0 || apartmentNo>150) {
+            if (description == null || description.isEmpty() || localization == null || localization.isEmpty() || floorNo < 0 || floorNo > 50 || apartmentNo < 0 || apartmentNo > 150) {
                 throw new RuntimeException("Incorrect building to be created");
             }
         }
@@ -111,7 +123,8 @@ public class BuildingTO {
     @Override
     public String toString() {
         return "BuildingTO{" +
-                "id=" + id +
+                "version=" + version +
+                ", id=" + id +
                 ", description='" + description + '\'' +
                 ", localization='" + localization + '\'' +
                 ", floorNo=" + floorNo +
@@ -127,8 +140,8 @@ public class BuildingTO {
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((localization == null) ? 0 : localization.hashCode());
-        result = prime * result + ((floorNo <0|| floorNo>50) ? 0 : Integer.hashCode(floorNo));
-        result = prime * result + ((apartmentNo<0 || apartmentNo>150) ? 0 : Integer.hashCode(apartmentNo));
+        result = prime * result + ((floorNo < 0 || floorNo > 50) ? 0 : Integer.hashCode(floorNo));
+        result = prime * result + ((apartmentNo < 0 || apartmentNo > 150) ? 0 : Integer.hashCode(apartmentNo));
         return result;
     }
 
@@ -156,15 +169,15 @@ public class BuildingTO {
                 return false;
         } else if (!localization.equals(other.localization))
             return false;
-        if (floorNo <0|| floorNo>50) {
-            if (other.floorNo <0|| other.floorNo>50)
+        if (floorNo < 0 || floorNo > 50) {
+            if (other.floorNo < 0 || other.floorNo > 50)
                 return false;
-        } else if (floorNo!=other.floorNo)
+        } else if (floorNo != other.floorNo)
             return false;
-        if (apartmentNo <0|| apartmentNo>150) {
-            if (other.apartmentNo <0|| other.apartmentNo>150)
+        if (apartmentNo < 0 || apartmentNo > 150) {
+            if (other.apartmentNo < 0 || other.apartmentNo > 150)
                 return false;
-        } else if (apartmentNo!=other.apartmentNo)
+        } else if (apartmentNo != other.apartmentNo)
             return false;
         return true;
     }
