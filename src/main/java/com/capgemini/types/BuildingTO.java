@@ -1,9 +1,11 @@
 package com.capgemini.types;
 
+import com.capgemini.domain.ApartmentEntity;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -13,11 +15,15 @@ public class BuildingTO {
     private Long id;
     private String description;
     private String localization;
-    private int floorNo;
+    private Integer floorNo;
     private boolean isElevator;
-    private int apartmentNo;
+    private Integer apartmentNo;
+    private Set<Long> listOfApartments = new HashSet<>();
 
-    public BuildingTO(int version, Long id, String description, String localization, int floorNo, boolean isElevator, int apartmentNo) {
+    public BuildingTO() {
+    }
+
+    public BuildingTO(int version, Long id, String description, String localization, Integer floorNo, boolean isElevator, Integer apartmentNo, Set<Long> listOfApartments) {
         this.version = version;
         this.id = id;
         this.description = description;
@@ -25,6 +31,7 @@ public class BuildingTO {
         this.floorNo = floorNo;
         this.isElevator = isElevator;
         this.apartmentNo = apartmentNo;
+        this.listOfApartments = listOfApartments;
     }
 
     public int getVersion() {
@@ -43,7 +50,7 @@ public class BuildingTO {
         return localization;
     }
 
-    public int getFloorNo() {
+    public Integer getFloorNo() {
         return floorNo;
     }
 
@@ -51,8 +58,12 @@ public class BuildingTO {
         return isElevator;
     }
 
-    public int getApartmentNo() {
+    public Integer getApartmentNo() {
         return apartmentNo;
+    }
+
+    public Set<Long> getListOfApartments() {
+        return listOfApartments;
     }
 
     public static BuildingTOBuilder builder() {
@@ -65,9 +76,11 @@ public class BuildingTO {
         private Long id;
         String description;
         String localization;
-        int floorNo;
+        Integer floorNo;
         boolean isElevator;
-        int apartmentNo;
+        Integer apartmentNo;
+        private Set<Long> listOfApartments;
+
 
         public BuildingTOBuilder() {
             super();
@@ -83,7 +96,7 @@ public class BuildingTO {
             return this;
         }
 
-        public BuildingTOBuilder withFloorNumber(int floorNo) {
+        public BuildingTOBuilder withFloorNumber(Integer floorNo) {
             this.floorNo = floorNo;
             return this;
         }
@@ -93,7 +106,7 @@ public class BuildingTO {
             return this;
         }
 
-        public BuildingTOBuilder withApartmentNumber(int apartmentNo) {
+        public BuildingTOBuilder withApartmentNumber(Integer apartmentNo) {
             this.apartmentNo = apartmentNo;
             return this;
         }
@@ -103,18 +116,27 @@ public class BuildingTO {
             return this;
         }
 
-        public BuildingTOBuilder withId(int version) {
+        public BuildingTOBuilder withVersionId(int version) {
             this.version = version;
             return this;
         }
 
-        public BuildingTO build() {
-            checkBeforeBuild(description, localization, floorNo, isElevator, apartmentNo);
-            return new BuildingTO(version, id, description, localization, floorNo, isElevator, apartmentNo);
+        public BuildingTOBuilder withListOfApartments(Set<Long> listOfApartments) {
+            this.listOfApartments = listOfApartments;
+            return this;
         }
 
-        private void checkBeforeBuild(String description, String localization, int floorNo, boolean isElevator, int apartmentNo) {
-            if (description == null || description.isEmpty() || localization == null || localization.isEmpty() || floorNo < 0 || floorNo > 50 || apartmentNo < 0 || apartmentNo > 150) {
+        public BuildingTO build() {
+            checkBeforeBuild(description, localization, floorNo, isElevator, apartmentNo, listOfApartments);
+            return new BuildingTO(version, id, description, localization, floorNo, isElevator, apartmentNo, listOfApartments);
+        }
+
+        private void checkBeforeBuild(String description, String localization, Integer floorNo, boolean isElevator, Integer apartmentNo, Set<Long> listOfApartments) {
+            if (description == null || description.isEmpty() ||
+                    localization == null || localization.isEmpty() ||
+                    floorNo < 0 || floorNo > 50 || floorNo == null ||
+                    apartmentNo < 0 || apartmentNo > 150 || apartmentNo == null ||
+                    listOfApartments == null) {
                 throw new RuntimeException("Incorrect building to be created");
             }
         }
@@ -130,55 +152,27 @@ public class BuildingTO {
                 ", floorNo=" + floorNo +
                 ", isElevator=" + isElevator +
                 ", apartmentNo=" + apartmentNo +
+                ", listOfApartments=" + listOfApartments +
                 '}';
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((localization == null) ? 0 : localization.hashCode());
-        result = prime * result + ((floorNo < 0 || floorNo > 50) ? 0 : Integer.hashCode(floorNo));
-        result = prime * result + ((apartmentNo < 0 || apartmentNo > 150) ? 0 : Integer.hashCode(apartmentNo));
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BuildingTO that = (BuildingTO) o;
+        return version == that.version &&
+                floorNo == that.floorNo &&
+                isElevator == that.isElevator &&
+                apartmentNo == that.apartmentNo &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(localization, that.localization) &&
+                Objects.equals(listOfApartments, that.listOfApartments);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        BuildingTO other = (BuildingTO) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
-            return false;
-        if (localization == null) {
-            if (other.localization != null)
-                return false;
-        } else if (!localization.equals(other.localization))
-            return false;
-        if (floorNo < 0 || floorNo > 50) {
-            if (other.floorNo < 0 || other.floorNo > 50)
-                return false;
-        } else if (floorNo != other.floorNo)
-            return false;
-        if (apartmentNo < 0 || apartmentNo > 150) {
-            if (other.apartmentNo < 0 || other.apartmentNo > 150)
-                return false;
-        } else if (apartmentNo != other.apartmentNo)
-            return false;
-        return true;
+    public int hashCode() {
+        return Objects.hash(version, id, description, localization, floorNo, isElevator, apartmentNo, listOfApartments);
     }
 }

@@ -12,49 +12,34 @@ public class ApartmentEntity extends AbstractEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @Version
-    private int version;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "APARTMENT_ID")
     private Long id;
 
     @Column
-    double apartmentSize;
+    private Double apartmentSize;
 
     @Column
-    int roomNo;
+    private Integer roomNo;
 
     @Column
-    int balconyNo;
+    private Integer balconyNo;
 
     @Column(nullable = false)
-    int floor;
+    private Integer floor;
 
     @Column(nullable = false)
-    String address;
+    private String address;
 
     @Column(nullable = false)
-    String status;
+    private String status;
 
     @Column(nullable = false)
-    double apartmentPrice;
+    private Double apartmentPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buildingEntity")
     private BuildingEntity buildingEntity;
-
-    @ManyToMany
-    Set<ClientEntity> clientEntitySet = new HashSet<>();
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
 
     public Long getId() {
         return id;
@@ -64,35 +49,35 @@ public class ApartmentEntity extends AbstractEntity {
         this.id = id;
     }
 
-    public double getApartmentSize() {
+    public Double getApartmentSize() {
         return apartmentSize;
     }
 
-    public void setApartmentSize(double apartmentSize) {
+    public void setApartmentSize(Double apartmentSize) {
         this.apartmentSize = apartmentSize;
     }
 
-    public int getRoomNo() {
+    public Integer getRoomNo() {
         return roomNo;
     }
 
-    public void setRoomNo(int roomNo) {
+    public void setRoomNo(Integer roomNo) {
         this.roomNo = roomNo;
     }
 
-    public int getBalconyNo() {
+    public Integer getBalconyNo() {
         return balconyNo;
     }
 
-    public void setBalconyNo(int balconyNo) {
+    public void setBalconyNo(Integer balconyNo) {
         this.balconyNo = balconyNo;
     }
 
-    public int getFloor() {
+    public Integer getFloor() {
         return floor;
     }
 
-    public void setFloor(int floor) {
+    public void setFloor(Integer floor) {
         this.floor = floor;
     }
 
@@ -112,11 +97,11 @@ public class ApartmentEntity extends AbstractEntity {
         this.status = status;
     }
 
-    public double getApartmentPrice() {
+    public Double getApartmentPrice() {
         return apartmentPrice;
     }
 
-    public void setApartmentPrice(double apartmentPrice) {
+    public void setApartmentPrice(Double apartmentPrice) {
         this.apartmentPrice = apartmentPrice;
     }
 
@@ -128,11 +113,4 @@ public class ApartmentEntity extends AbstractEntity {
         this.buildingEntity = buildingEntity;
     }
 
-    public Set<ClientEntity> getClientEntitySet() {
-        return clientEntitySet;
-    }
-
-    public void setClientEntitySet(Set<ClientEntity> clientEntitySet) {
-        this.clientEntitySet = clientEntitySet;
-    }
 }

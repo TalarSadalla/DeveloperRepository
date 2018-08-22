@@ -12,40 +12,28 @@ public class ClientEntity extends AbstractEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @Version
-    private int version;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "CLIENT_ID")
     private Long id;
 
     @Column(nullable = false)
-    String firstName;
+    private String firstName;
 
     @Column(nullable = false)
-    String lastName;
+    private String lastName;
 
     @Column(nullable = false)
-    String phoneNumber;
+    private String phoneNumber;
 
     @Column(nullable = false)
-    String address;
+    private String address;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "apartments_customers",
             joinColumns = {@JoinColumn(name = "APARTMENT_ID", nullable = false, updatable = false)},
             inverseJoinColumns = {@JoinColumn(name = "CLIENT_ID", nullable = false, updatable = false)}
     )
-    private Set<ClientEntity> apartmentEntitySet = new HashSet<>();
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
+    private Set<ApartmentEntity> apartmentEntitySet = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -87,11 +75,11 @@ public class ClientEntity extends AbstractEntity {
         this.address = address;
     }
 
-    public Set<ClientEntity> getApartmentEntitySet() {
+    public Set<ApartmentEntity> getApartmentEntitySet() {
         return apartmentEntitySet;
     }
 
-    public void setApartmentEntitySet(Set<ClientEntity> apartmentEntitySet) {
+    public void setApartmentEntitySet(Set<ApartmentEntity> apartmentEntitySet) {
         this.apartmentEntitySet = apartmentEntitySet;
     }
 }

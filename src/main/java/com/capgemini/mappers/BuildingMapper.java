@@ -1,5 +1,6 @@
 package com.capgemini.mappers;
 
+import com.capgemini.domain.ApartmentEntity;
 import com.capgemini.domain.BuildingEntity;
 import com.capgemini.types.BuildingTO;
 import com.capgemini.types.BuildingTO.BuildingTOBuilder;
@@ -15,7 +16,19 @@ public class BuildingMapper {
         if (buildingEntity == null)
             return null;
 
-        return new BuildingTOBuilder().withId(buildingEntity.getId()).build();
+        return new BuildingTOBuilder()
+                .withVersionId(buildingEntity.getVersion())
+                .withId(buildingEntity.getId())
+                .withDescription(buildingEntity.getDescription())
+                .withLocalization(buildingEntity.getLocalization())
+                .withFloorNumber(buildingEntity.getFloorNo())
+                .withElevator(buildingEntity.isElevator())
+                .withApartmentNumber(buildingEntity.getApartmentNo())
+                .withListOfApartments(buildingEntity.getListOfApartments()
+                        .stream()
+                        .map(ApartmentEntity::getId)
+                        .collect(Collectors.toSet()))
+                .build();
 
     }
 
@@ -23,6 +36,13 @@ public class BuildingMapper {
         if (buildingTO == null)
             return null;
         BuildingEntity buildingEntity = new BuildingEntity();
+        buildingEntity.setVersion(buildingTO.getVersion());
+        buildingEntity.setId(buildingTO.getId());
+        buildingEntity.setDescription(buildingTO.getDescription());
+        buildingEntity.setLocalization(buildingTO.getLocalization());
+        buildingEntity.setFloorNo(buildingTO.getFloorNo());
+        buildingEntity.setElevator(buildingTO.isElevator());
+        buildingEntity.setApartmentNo(buildingTO.getApartmentNo());
         return buildingEntity;
     }
 

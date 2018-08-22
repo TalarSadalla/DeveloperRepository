@@ -12,8 +12,11 @@ public abstract class AbstractEntity {
     private Date created;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated", nullable = false)
+    @Column(name = "updated")
     private Date updated;
+
+    @Version
+    private int version;
 
     public Date getCreated() {
         return created;
@@ -29,5 +32,13 @@ public abstract class AbstractEntity {
 
     public void setUpdated(final Timestamp updated) {
         this.updated = updated;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(final int version) {
+        this.version = version;
     }
 }

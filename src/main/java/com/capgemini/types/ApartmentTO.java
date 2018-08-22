@@ -2,6 +2,7 @@ package com.capgemini.types;
 
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class ApartmentTO {
@@ -10,25 +11,26 @@ public class ApartmentTO {
 
     private Long id;
 
-    private double apartmentSize;
+    private Double apartmentSize;
 
-    private int roomNo;
+    private Integer roomNo;
 
-    private int balconyNo;
+    private Integer balconyNo;
 
-    private int floor;
+    private Integer floor;
 
     private String address;
 
     private String status;
 
-    private double apartmentPrice;
+    private Double apartmentPrice;
 
     private Long buildingId;
 
-    Set<Long> clientIdSet = new HashSet<>();
+    public ApartmentTO() {
+    }
 
-    public ApartmentTO(int version, Long id, double apartmentSize, int roomNo, int balconyNo, int floor, String address, String status, double apartmentPrice, Long buildingId, Set<Long> clientIdSet) {
+    public ApartmentTO(int version, Long id, Double apartmentSize, Integer roomNo, Integer balconyNo, Integer floor, String address, String status, Double apartmentPrice, Long buildingId) {
         this.version = version;
         this.id = id;
         this.apartmentSize = apartmentSize;
@@ -39,7 +41,6 @@ public class ApartmentTO {
         this.status = status;
         this.apartmentPrice = apartmentPrice;
         this.buildingId = buildingId;
-        this.clientIdSet = clientIdSet;
     }
 
     public int getVersion() {
@@ -50,19 +51,59 @@ public class ApartmentTO {
         return id;
     }
 
-    public double getApartmentSize() {
+    public Double getApartmentSize() {
         return apartmentSize;
     }
 
-    public int getRoomNo() {
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setApartmentSize(Double apartmentSize) {
+        this.apartmentSize = apartmentSize;
+    }
+
+    public void setRoomNo(Integer roomNo) {
+        this.roomNo = roomNo;
+    }
+
+    public void setBalconyNo(Integer balconyNo) {
+        this.balconyNo = balconyNo;
+    }
+
+    public void setFloor(Integer floor) {
+        this.floor = floor;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setApartmentPrice(Double apartmentPrice) {
+        this.apartmentPrice = apartmentPrice;
+    }
+
+    public void setBuildingId(Long buildingId) {
+        this.buildingId = buildingId;
+    }
+
+    public Integer getRoomNo() {
         return roomNo;
     }
 
-    public int getBalconyNo() {
+    public Integer getBalconyNo() {
         return balconyNo;
     }
 
-    public int getFloor() {
+    public Integer getFloor() {
         return floor;
     }
 
@@ -74,16 +115,12 @@ public class ApartmentTO {
         return status;
     }
 
-    public double getApartmentPrice() {
+    public Double getApartmentPrice() {
         return apartmentPrice;
     }
 
     public Long getBuildingId() {
         return buildingId;
-    }
-
-    public Set<Long> getClientIdSet() {
-        return clientIdSet;
     }
 
     public static ApartmentTOBuilder builder() {
@@ -94,37 +131,36 @@ public class ApartmentTO {
 
         private int version;
         private Long id;
-        private double apartmentSize;
-        private int roomNo;
-        private int balconyNo;
-        private int floor;
+        private Double apartmentSize;
+        private Integer roomNo;
+        private Integer balconyNo;
+        private Integer floor;
         private String address;
         private String status;
-        private double apartmentPrice;
+        private Double apartmentPrice;
         private Long buildingId;
-        private Set<Long> clientIdSet = new HashSet<>();
 
 
         public ApartmentTOBuilder() {
             super();
         }
 
-        public ApartmentTOBuilder withapartmentSize(double apartmentSize) {
+        public ApartmentTOBuilder withApartmentSize(Double apartmentSize) {
             this.apartmentSize = apartmentSize;
             return this;
         }
 
-        public ApartmentTOBuilder withRoomNo(int roomNo) {
+        public ApartmentTOBuilder withRoomNo(Integer roomNo) {
             this.roomNo = roomNo;
             return this;
         }
 
-        public ApartmentTOBuilder withBalconyNo(int balconyNo) {
+        public ApartmentTOBuilder withBalconyNo(Integer balconyNo) {
             this.balconyNo = balconyNo;
             return this;
         }
 
-        public ApartmentTOBuilder withFloor(int floor) {
+        public ApartmentTOBuilder withFloor(Integer floor) {
             this.floor = floor;
             return this;
         }
@@ -139,7 +175,7 @@ public class ApartmentTO {
             return this;
         }
 
-        public ApartmentTOBuilder withApartmentPrice(double apartmentPrice) {
+        public ApartmentTOBuilder withApartmentPrice(Double apartmentPrice) {
             this.apartmentPrice = apartmentPrice;
             return this;
         }
@@ -154,23 +190,27 @@ public class ApartmentTO {
             return this;
         }
 
-        public ApartmentTOBuilder withId(int version) {
+        public ApartmentTOBuilder withVersionId(int version) {
             this.version = version;
             return this;
         }
 
-        public ApartmentTOBuilder withClientIdSet(Set<Long> clientIdSet) {
-            this.clientIdSet = clientIdSet;
-            return this;
-        }
 
         public ApartmentTO build() {
-            checkBeforeBuild(version, id, apartmentSize, roomNo, balconyNo, floor, address, status, apartmentPrice, buildingId, clientIdSet);
-            return new ApartmentTO(version, id, apartmentSize, roomNo, balconyNo, floor, address, status, apartmentPrice, buildingId, clientIdSet);
+            checkBeforeBuild(apartmentSize, roomNo, balconyNo, floor, address, status, apartmentPrice, buildingId );
+            return new ApartmentTO(version, id, apartmentSize, roomNo, balconyNo, floor, address, status, apartmentPrice, buildingId);
         }
 
-        private void checkBeforeBuild(int version, Long id, double apartmentSize, int roomNo, int balconyNo, int floor, String address, String status, double apartmentPrice, Long buildingId, Set<Long> clientIdSet) {
-            if (apartmentSize < 0 || apartmentSize > 500 || roomNo < 0 || roomNo > 40 || balconyNo < 0 || balconyNo > 20 || floor < 0 || floor > 5 || address.isEmpty() || address == null || status.isEmpty() || status == null || apartmentPrice < 0 || apartmentPrice > 100000000 || buildingId < 0 || buildingId==null || clientIdSet.isEmpty() || clientIdSet == null) {
+        private void checkBeforeBuild(Double apartmentSize, Integer roomNo, Integer balconyNo, Integer floor, String address, String status, Double apartmentPrice, Long buildingId) {
+            if (apartmentSize < 0 ||
+                    apartmentSize > 500 || apartmentSize == null ||
+                    roomNo < 0 || roomNo > 40 || roomNo == null ||
+                    balconyNo < 0 || balconyNo > 20 || balconyNo == null ||
+                    floor < 0 || floor > 5 || floor == null ||
+                    address.isEmpty() || address == null ||
+                    status.isEmpty() || status == null ||
+                    apartmentPrice < 0 || apartmentPrice > 100000000 || apartmentPrice == null ||
+                    buildingId < 0 || buildingId == null) {
                 throw new RuntimeException("Incorrect apartment to be created");
             }
         }
@@ -189,46 +229,28 @@ public class ApartmentTO {
                 ", status='" + status + '\'' +
                 ", apartmentPrice=" + apartmentPrice +
                 ", buildingId=" + buildingId +
-                ", clientIdSet=" + clientIdSet +
                 '}';
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((apartmentSize < 0 || apartmentSize > 500) ? 0 : Double.hashCode(apartmentSize));
-        result = prime * result + ((roomNo < 0 || roomNo > 40) ? 0 : Integer.hashCode(roomNo));
-        result = prime * result + ((balconyNo < 0 || balconyNo > 20) ? 0 : Integer.hashCode(balconyNo));
-        result = prime * result + ((floor < 0 || floor > 5) ? 0 : Integer.hashCode(floor));
-        result = prime * result + ((address == null) ? 0 : address.hashCode());
-        result = prime * result + ((status == null) ? 0 : status.hashCode());
-        result = prime * result + ((apartmentPrice < 0 || apartmentPrice > 100000000) ? 0 : Double.hashCode(apartmentSize));
-        result = prime * result + ((buildingId <0) ? 0 : buildingId.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ApartmentTO that = (ApartmentTO) o;
+        return version == that.version &&
+                Double.compare(that.apartmentSize, apartmentSize) == 0 &&
+                roomNo == that.roomNo &&
+                balconyNo == that.balconyNo &&
+                floor == that.floor &&
+                Double.compare(that.apartmentPrice, apartmentPrice) == 0 &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(address, that.address) &&
+                Objects.equals(status, that.status) &&
+                Objects.equals(buildingId, that.buildingId);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ApartmentTO other = (ApartmentTO) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (address == null) {
-            if (other.address != null)
-                return false;
-        } else if (!address.equals(other.address))
-            return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(version, id, apartmentSize, roomNo, balconyNo, floor, address, status, apartmentPrice, buildingId);
     }
 }
