@@ -1,19 +1,10 @@
 package com.capgemini.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-
+import com.capgemini.exceptions.NoSuchApartmentException;
 import com.capgemini.types.ApartmentTO;
 import com.capgemini.types.ApartmentTO.ApartmentTOBuilder;
 import com.capgemini.types.BuildingTO;
 import com.capgemini.types.BuildingTO.BuildingTOBuilder;
-import com.capgemini.types.ClientTO;
-import com.capgemini.types.ClientTO.ClientTOBuilder;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +13,15 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
+
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = "spring.profiles.active=hsql")
+@SpringBootTest(properties = "spring.profiles.active=mysql")
 public class ApartmentServiceTest {
 
     @Autowired
@@ -43,7 +37,7 @@ public class ApartmentServiceTest {
 
         //given
 
-        Set<Long> listOfApartmentsId = new HashSet<>();
+        List<Long> listOfApartmentsId = new ArrayList<>();
 
         BuildingTO buildingTO = new BuildingTOBuilder()
                 .withLocalization("Poznan")
@@ -91,7 +85,7 @@ public class ApartmentServiceTest {
 
         //given
 
-        Set<Long> listOfApartmentsId = new HashSet<>();
+        List<Long> listOfApartmentsId = new ArrayList<>();
 
         BuildingTO buildingTO = new BuildingTOBuilder()
                 .withLocalization("Poznan")
@@ -156,7 +150,7 @@ public class ApartmentServiceTest {
     public void testShouldUpdateApartmentOptimisticLocking() {
         //given
 
-        Set<Long> listOfApartmentsId = new HashSet<>();
+        List<Long> listOfApartmentsId = new ArrayList<>();
 
         BuildingTO buildingTO = new BuildingTOBuilder()
                 .withLocalization("Poznan")
@@ -188,9 +182,52 @@ public class ApartmentServiceTest {
         apartmentTOSet.add(apartmentTO.getId());
 
         ApartmentTO foundApartment=apartmentService.addNewApartment(apartmentTO);
-        foundApartment.setAddress("Poland");
-        apartmentService.updateApartment(foundApartment);
-        foundApartment.setAddress("Warszawa");
-        apartmentService.updateApartment(foundApartment);
+        ApartmentTO f1=apartmentService.findApartmentById(foundApartment.getId());
+        f1.setAddress("Poland");
+        ApartmentTO f2=apartmentService.findApartmentById(foundApartment.getId());
+        f2.setAddress("Warszawa");
+        f1=apartmentService.updateApartment(f1);
+        apartmentService.updateApartment(f2);
+    }
+
+    @Test(expected = NoSuchApartmentException.class)
+    @Transactional
+    public void testShouldDeleteApartment() {
+        //given
+
+        List<Long> listOfApartmentsId = new ArrayList<>();
+
+        BuildingTO buildingTO = new BuildingTOBuilder()
+                .withLocalization("Poznan")
+                .withApartmentNumber(32)
+                .withDescription("Nowy Marcelin")
+                .withElevator(true)
+                .withFloorNumber(5)
+                .withListOfApartments(listOfApartmentsId)
+                .build();
+
+        BuildingTO saveBuilding=buildingService.addNewBuilding(buildingTO);
+
+        ApartmentTO apartmentTO=new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("FREE")
+                .withRoomNo(10)
+                .withFloor(2)
+                .withBalconyNo(2)
+                .withBuildingId(saveBuilding.getId())
+                .withApartmentSize(75.19)
+                .withApartmentPrice(440000.00)
+                .build();
+        Set<Long> apartmentTOSet= new HashSet<>();
+
+        //when
+        buildingService.addNewBuilding(buildingTO);
+
+
+        apartmentTOSet.add(apartmentTO.getId());
+
+        ApartmentTO foundApartment=apartmentService.addNewApartment(apartmentTO);
+        apartmentService.deleteApartment(foundApartment);
+        foundApartment=apartmentService.findApartmentById(foundApartment.getId());
     }
 }

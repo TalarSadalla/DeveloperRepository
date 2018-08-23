@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class ApartmentTO {
 
-    private int version;
+    private Long version;
 
     private Long id;
 
@@ -30,7 +30,7 @@ public class ApartmentTO {
     public ApartmentTO() {
     }
 
-    public ApartmentTO(int version, Long id, Double apartmentSize, Integer roomNo, Integer balconyNo, Integer floor, String address, String status, Double apartmentPrice, Long buildingId) {
+    public ApartmentTO(Long version, Long id, Double apartmentSize, Integer roomNo, Integer balconyNo, Integer floor, String address, String status, Double apartmentPrice, Long buildingId) {
         this.version = version;
         this.id = id;
         this.apartmentSize = apartmentSize;
@@ -43,7 +43,7 @@ public class ApartmentTO {
         this.buildingId = buildingId;
     }
 
-    public int getVersion() {
+    public Long getVersion() {
         return version;
     }
 
@@ -55,7 +55,7 @@ public class ApartmentTO {
         return apartmentSize;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(Long version) {
         this.version = version;
     }
 
@@ -129,7 +129,7 @@ public class ApartmentTO {
 
     public static class ApartmentTOBuilder {
 
-        private int version;
+        private Long version;
         private Long id;
         private Double apartmentSize;
         private Integer roomNo;
@@ -190,7 +190,7 @@ public class ApartmentTO {
             return this;
         }
 
-        public ApartmentTOBuilder withVersionId(int version) {
+        public ApartmentTOBuilder withVersionId(Long version) {
             this.version = version;
             return this;
         }

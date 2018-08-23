@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +29,7 @@ public class BuildingServiceImpl implements BuildingService {
     @Override
     public BuildingTO addNewBuilding(BuildingTO buildingTO) {
         BuildingEntity buildingEntity = buildingDao.save(BuildingMapper.toBuildingEntity(buildingTO));
-        Set<ApartmentEntity> listOfApartments = new HashSet<>();
+        List<ApartmentEntity> listOfApartments = new ArrayList<>();
         buildingEntity.setListOfApartments(listOfApartments);
         return BuildingMapper.toBuildingTO(buildingEntity);
     }
@@ -40,8 +37,8 @@ public class BuildingServiceImpl implements BuildingService {
     @Override
     public BuildingTO updateBuilding(BuildingTO buildingTO) {
         BuildingEntity buildingEntity = buildingDao.save(BuildingMapper.toBuildingEntity(buildingTO));
-        Set<Long> listOfApartmentsId = buildingTO.getListOfApartments();
-        Set<ApartmentEntity> apartmentsEntityList = new HashSet<>();
+        List<Long> listOfApartmentsId = buildingTO.getListOfApartments();
+        List<ApartmentEntity> apartmentsEntityList = new ArrayList<>();
         for (Long apartmentId : listOfApartmentsId) {
             apartmentsEntityList.add(apartmentDao.findById(apartmentId).get());
         }
@@ -74,10 +71,4 @@ public class BuildingServiceImpl implements BuildingService {
         } else return BuildingMapper.toBuildingTO(buildingDao.findBuildingByLocalization(localization));
     }
 
-    @Override
-    public BuildingTO findBuildingByListOfApartments(Set<ApartmentTO> listOfApartments){
-        BuildingEntity buildingEntity = buildingDao.findBuildingByListOfApartments(ApartmentMapper.map2Entities(listOfApartments));
-        if (buildingEntity == null) throw new NoSuchBuildingException("No such building");
-        else return BuildingMapper.toBuildingTO(buildingEntity);
-    }
 }

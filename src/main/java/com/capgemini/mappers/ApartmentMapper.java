@@ -5,6 +5,7 @@ import com.capgemini.domain.ClientEntity;
 import com.capgemini.types.ApartmentTO;
 import com.capgemini.types.ApartmentTO.ApartmentTOBuilder;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,12 +48,12 @@ public class ApartmentMapper {
         return apartmentEntity;
     }
 
-    public static Set<ApartmentTO> map2TOs(Set<ApartmentEntity> apartmentEntities) {
-        return apartmentEntities.stream().map(ApartmentMapper::toApartmentTO).collect(Collectors.toSet());
+    public static List<ApartmentTO> map2TOs(List<ApartmentEntity> apartmentEntities) {
+        return apartmentEntities.stream().map(ApartmentMapper::toApartmentTO).collect(Collectors.toList());
     }
 
-    public static Set<ApartmentEntity> map2Entities(Set<ApartmentTO> apartmentTOs) {
-        return apartmentTOs.stream().map(ApartmentMapper::toApartmentEntity).collect(Collectors.toSet());
+    public static List<ApartmentEntity> map2Entities(List<ApartmentTO> apartmentTOs) {
+        return apartmentTOs.stream().map(ApartmentMapper::toApartmentEntity).collect(Collectors.toList());
     }
 
 }

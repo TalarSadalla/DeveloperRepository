@@ -17,6 +17,4 @@ public interface BuildingService {
     BuildingTO findBuildingById(Long id);
 
     BuildingTO findBuildingByLocalization(String localization) ;
-
-    BuildingTO findBuildingByListOfApartments(Set<ApartmentTO> listOfApartments);
 }

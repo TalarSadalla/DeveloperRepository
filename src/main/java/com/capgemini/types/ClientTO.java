@@ -1,20 +1,18 @@
 package com.capgemini.types;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class ClientTO {
 
-    private int version;
+    private Long version;
     private Long id;
     String firstName;
     String lastName;
     String phoneNumber;
     String address;
-    private Set<Long> apartmentIdSet = new HashSet<>();
+    private List<Long> apartmentIdSet = new ArrayList<>();
 
-    public ClientTO(int version, Long id, String firstName, String lastName, String phoneNumber, String address, Set<Long> apartmentIdSet) {
+    public ClientTO(Long version, Long id, String firstName, String lastName, String phoneNumber, String address, List<Long> apartmentIdSet) {
         this.version = version;
         this.id = id;
         this.firstName = firstName;
@@ -24,8 +22,36 @@ public class ClientTO {
         this.apartmentIdSet = apartmentIdSet;
     }
 
-    public int getVersion() {
+    public Long getVersion() {
         return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setApartmentIdSet(List<Long> apartmentIdSet) {
+        this.apartmentIdSet = apartmentIdSet;
     }
 
     public Long getId() {
@@ -48,7 +74,7 @@ public class ClientTO {
         return address;
     }
 
-    public Set<Long> getApartmentIdSet() {
+    public List<Long> getApartmentIdSet() {
         return apartmentIdSet;
     }
 
@@ -58,15 +84,15 @@ public class ClientTO {
 
     public static class ClientTOBuilder {
 
-        private int version;
+        private Long version;
         private Long id;
         private String firstName;
         private String lastName;
         private String phoneNumber;
         private String address;
-        private Set<Long> apartmentIdSet;
+        private List<Long> apartmentIdSet;
 
-        public ClientTOBuilder withVersionId(int version) {
+        public ClientTOBuilder withVersionId(Long version) {
             this.version = version;
             return this;
         }
@@ -96,7 +122,7 @@ public class ClientTO {
             return this;
         }
 
-        public ClientTOBuilder withApartmentIds(Set<Long> apartmentIdSet) {
+        public ClientTOBuilder withApartmentIds(List<Long> apartmentIdSet) {
             this.apartmentIdSet = apartmentIdSet;
             return this;
         }
@@ -107,7 +133,7 @@ public class ClientTO {
         }
 
         private void checkBeforeBuild(String firstName, String lastName, String phoneNumber, String address,
-                                      Set<Long> apartmentIdSet) {
+                                      List<Long> apartmentIdSet) {
             if (firstName == null || firstName.isEmpty() ||
                     lastName == null || lastName.isEmpty() ||
                     phoneNumber == null || phoneNumber.isEmpty() ||

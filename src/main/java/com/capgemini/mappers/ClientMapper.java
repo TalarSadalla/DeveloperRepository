@@ -8,6 +8,7 @@ import com.capgemini.types.BuildingTO.BuildingTOBuilder;
 import com.capgemini.types.ClientTO;
 import com.capgemini.types.ClientTO.ClientTOBuilder;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class ClientMapper {
                 .withApartmentIds(clientEntity.getApartmentEntitySet()
                         .stream()
                         .map(ApartmentEntity::getId)
-                        .collect(Collectors.toSet()))
+                        .collect(Collectors.toList()))
                 .build();
 
     }
@@ -47,12 +48,12 @@ public class ClientMapper {
         return clientEntity;
     }
 
-    public static Set<ClientTO> map2TOs(Set<ClientEntity> clientEntities) {
-        return clientEntities.stream().map(ClientMapper::toClientTO).collect(Collectors.toSet());
+    public static List<ClientTO> map2TOs(List<ClientEntity> clientEntities) {
+        return clientEntities.stream().map(ClientMapper::toClientTO).collect(Collectors.toList());
     }
 
-    public static Set<ClientEntity> map2Entities(Set<ClientTO> clientTOs) {
-        return clientTOs.stream().map(ClientMapper::toClientEntity).collect(Collectors.toSet());
+    public static List<ClientEntity> map2Entities(List<ClientTO> clientTOs) {
+        return clientTOs.stream().map(ClientMapper::toClientEntity).collect(Collectors.toList());
     }
 
 }

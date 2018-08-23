@@ -1,14 +1,15 @@
 package com.capgemini.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "APARTMENT")
+@Table(name = "apartments")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @EntityListeners({OnCreateListener.class, OnUpdateListener.class})
-public class ApartmentEntity extends AbstractEntity {
+public class ApartmentEntity extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,8 +39,8 @@ public class ApartmentEntity extends AbstractEntity {
     private Double apartmentPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buildingEntity")
-    private BuildingEntity buildingEntity;
+    @JoinColumn(name = "building")
+    private BuildingEntity building;
 
     public Long getId() {
         return id;
@@ -106,11 +107,11 @@ public class ApartmentEntity extends AbstractEntity {
     }
 
     public BuildingEntity getBuildingEntity() {
-        return buildingEntity;
+        return building;
     }
 
-    public void setBuildingEntity(BuildingEntity buildingEntity) {
-        this.buildingEntity = buildingEntity;
+    public void setBuildingEntity(BuildingEntity building) {
+        this.building = building;
     }
 
 }

@@ -12,6 +12,7 @@ import com.capgemini.types.ApartmentTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.OptimisticLockException;
 import java.util.Optional;
 
 @Service
@@ -39,7 +40,7 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public ApartmentTO updateApartment(ApartmentTO apartmentTO) {
-        ApartmentEntity apartmentEntity = ApartmentMapper.toApartmentEntity(apartmentTO);
+       ApartmentEntity apartmentEntity = ApartmentMapper.toApartmentEntity(apartmentTO);
         Optional<BuildingEntity> optionalBuildingEntity = buildingDao.findById(apartmentTO.getBuildingId());
         if (optionalBuildingEntity.isPresent()) {
             optionalBuildingEntity.get().getListOfApartments().add(apartmentEntity);

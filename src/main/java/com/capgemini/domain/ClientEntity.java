@@ -1,14 +1,17 @@
 package com.capgemini.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "CLIENT")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @EntityListeners({OnCreateListener.class, OnUpdateListener.class})
-public class ClientEntity extends AbstractEntity {
+public class ClientEntity extends AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,7 +36,7 @@ public class ClientEntity extends AbstractEntity {
             joinColumns = {@JoinColumn(name = "APARTMENT_ID", nullable = false, updatable = false)},
             inverseJoinColumns = {@JoinColumn(name = "CLIENT_ID", nullable = false, updatable = false)}
     )
-    private Set<ApartmentEntity> apartmentEntitySet = new HashSet<>();
+    private List<ApartmentEntity> apartmentEntitySet = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -75,11 +78,11 @@ public class ClientEntity extends AbstractEntity {
         this.address = address;
     }
 
-    public Set<ApartmentEntity> getApartmentEntitySet() {
+    public List<ApartmentEntity> getApartmentEntitySet() {
         return apartmentEntitySet;
     }
 
-    public void setApartmentEntitySet(Set<ApartmentEntity> apartmentEntitySet) {
+    public void setApartmentEntitySet(List<ApartmentEntity> apartmentEntitySet) {
         this.apartmentEntitySet = apartmentEntitySet;
     }
 }

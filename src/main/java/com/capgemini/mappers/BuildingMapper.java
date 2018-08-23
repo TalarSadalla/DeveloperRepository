@@ -5,6 +5,7 @@ import com.capgemini.domain.BuildingEntity;
 import com.capgemini.types.BuildingTO;
 import com.capgemini.types.BuildingTO.BuildingTOBuilder;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class BuildingMapper {
                 .withListOfApartments(buildingEntity.getListOfApartments()
                         .stream()
                         .map(ApartmentEntity::getId)
-                        .collect(Collectors.toSet()))
+                        .collect(Collectors.toList()))
                 .build();
 
     }
@@ -46,12 +47,12 @@ public class BuildingMapper {
         return buildingEntity;
     }
 
-    public static Set<BuildingTO> map2TOs(Set<BuildingEntity> buildingEntities) {
-        return buildingEntities.stream().map(BuildingMapper::toBuildingTO).collect(Collectors.toSet());
+    public static List<BuildingTO> map2TOs(List<BuildingEntity> buildingEntities) {
+        return buildingEntities.stream().map(BuildingMapper::toBuildingTO).collect(Collectors.toList());
     }
 
-    public static Set<BuildingEntity> map2Entities(Set<BuildingTO> buildingTOs) {
-        return buildingTOs.stream().map(BuildingMapper::toBuildingEntity).collect(Collectors.toSet());
+    public static List<BuildingEntity> map2Entities(List<BuildingTO> buildingTOs) {
+        return buildingTOs.stream().map(BuildingMapper::toBuildingEntity).collect(Collectors.toList());
     }
 
 }

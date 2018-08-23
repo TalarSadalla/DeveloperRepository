@@ -4,26 +4,24 @@ import com.capgemini.domain.ApartmentEntity;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
 public class BuildingTO {
 
-    private int version;
+    private Long version;
     private Long id;
     private String description;
     private String localization;
     private Integer floorNo;
     private boolean isElevator;
     private Integer apartmentNo;
-    private Set<Long> listOfApartments = new HashSet<>();
+    private List<Long> listOfApartments = new ArrayList<>();
 
     public BuildingTO() {
     }
 
-    public BuildingTO(int version, Long id, String description, String localization, Integer floorNo, boolean isElevator, Integer apartmentNo, Set<Long> listOfApartments) {
+    public BuildingTO(Long version, Long id, String description, String localization, Integer floorNo, boolean isElevator, Integer apartmentNo, List<Long> listOfApartments) {
         this.version = version;
         this.id = id;
         this.description = description;
@@ -34,8 +32,40 @@ public class BuildingTO {
         this.listOfApartments = listOfApartments;
     }
 
-    public int getVersion() {
+    public Long getVersion() {
         return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setLocalization(String localization) {
+        this.localization = localization;
+    }
+
+    public void setFloorNo(Integer floorNo) {
+        this.floorNo = floorNo;
+    }
+
+    public void setElevator(boolean elevator) {
+        isElevator = elevator;
+    }
+
+    public void setApartmentNo(Integer apartmentNo) {
+        this.apartmentNo = apartmentNo;
+    }
+
+    public void setListOfApartments(List<Long> listOfApartments) {
+        this.listOfApartments = listOfApartments;
     }
 
     public Long getId() {
@@ -62,7 +92,7 @@ public class BuildingTO {
         return apartmentNo;
     }
 
-    public Set<Long> getListOfApartments() {
+    public List<Long> getListOfApartments() {
         return listOfApartments;
     }
 
@@ -72,14 +102,14 @@ public class BuildingTO {
 
     public static class BuildingTOBuilder {
 
-        private int version;
+        private Long version;
         private Long id;
         String description;
         String localization;
         Integer floorNo;
         boolean isElevator;
         Integer apartmentNo;
-        private Set<Long> listOfApartments;
+        private List<Long> listOfApartments;
 
 
         public BuildingTOBuilder() {
@@ -116,12 +146,12 @@ public class BuildingTO {
             return this;
         }
 
-        public BuildingTOBuilder withVersionId(int version) {
+        public BuildingTOBuilder withVersionId(Long version) {
             this.version = version;
             return this;
         }
 
-        public BuildingTOBuilder withListOfApartments(Set<Long> listOfApartments) {
+        public BuildingTOBuilder withListOfApartments(List<Long> listOfApartments) {
             this.listOfApartments = listOfApartments;
             return this;
         }
@@ -131,7 +161,7 @@ public class BuildingTO {
             return new BuildingTO(version, id, description, localization, floorNo, isElevator, apartmentNo, listOfApartments);
         }
 
-        private void checkBeforeBuild(String description, String localization, Integer floorNo, boolean isElevator, Integer apartmentNo, Set<Long> listOfApartments) {
+        private void checkBeforeBuild(String description, String localization, Integer floorNo, boolean isElevator, Integer apartmentNo, List<Long> listOfApartments) {
             if (description == null || description.isEmpty() ||
                     localization == null || localization.isEmpty() ||
                     floorNo < 0 || floorNo > 50 || floorNo == null ||

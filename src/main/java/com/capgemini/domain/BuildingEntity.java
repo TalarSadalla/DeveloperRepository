@@ -1,14 +1,17 @@
 package com.capgemini.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "BUILDING")
+@Table(name = "building")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @EntityListeners({OnCreateListener.class, OnUpdateListener.class})
-public class BuildingEntity extends AbstractEntity {
+public class BuildingEntity extends AbstractEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
@@ -31,8 +34,8 @@ public class BuildingEntity extends AbstractEntity {
     @Column(nullable = false)
     int apartmentNo;
 
-    @OneToMany(mappedBy = "buildingEntity", cascade = CascadeType.REMOVE)
-    Set<ApartmentEntity> listOfApartments = new HashSet<>();
+    @OneToMany(mappedBy = "building",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    List<ApartmentEntity> listOfApartments = new ArrayList<>();
 
 
     public Long getId() {
@@ -83,11 +86,11 @@ public class BuildingEntity extends AbstractEntity {
         this.apartmentNo = apartmentNo;
     }
 
-    public Set<ApartmentEntity> getListOfApartments() {
+    public List<ApartmentEntity> getListOfApartments() {
         return listOfApartments;
     }
 
-    public void setListOfApartments(Set<ApartmentEntity> listOfApartments) {
+    public void setListOfApartments(List<ApartmentEntity> listOfApartments) {
         this.listOfApartments = listOfApartments;
     }
 }
