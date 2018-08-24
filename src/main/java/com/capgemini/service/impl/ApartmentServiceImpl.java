@@ -8,14 +8,18 @@ import com.capgemini.exceptions.NoSuchApartmentException;
 import com.capgemini.exceptions.NoSuchBuildingException;
 import com.capgemini.mappers.ApartmentMapper;
 import com.capgemini.service.ApartmentService;
+import com.capgemini.types.ApartmentSearchCriteriaTO;
 import com.capgemini.types.ApartmentTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.OptimisticLockException;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ApartmentServiceImpl implements ApartmentService {
 
     @Autowired
@@ -40,7 +44,7 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public ApartmentTO updateApartment(ApartmentTO apartmentTO) {
-       ApartmentEntity apartmentEntity = ApartmentMapper.toApartmentEntity(apartmentTO);
+        ApartmentEntity apartmentEntity = ApartmentMapper.toApartmentEntity(apartmentTO);
         Optional<BuildingEntity> optionalBuildingEntity = buildingDao.findById(apartmentTO.getBuildingId());
         if (optionalBuildingEntity.isPresent()) {
             optionalBuildingEntity.get().getListOfApartments().add(apartmentEntity);
@@ -79,9 +83,11 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public ApartmentTO findApartmentByApartmentSize(Double apartmentSize) {
-        ApartmentEntity apartmentEntity = apartmentDao.findApartmentByApartmentSize(apartmentSize);
-        if (apartmentEntity == null) throw new NoSuchApartmentException("No such apartment found");
-        else return ApartmentMapper.toApartmentTO(apartmentEntity);
+    public List<ApartmentTO> findApartmentsByCriteria(ApartmentSearchCriteriaTO apartmentSearchCriteriaTO) {
+        List<ApartmentEntity> apartmentEntities = new ArrayList<>();
+        if (apartmentSearchCriteriaTO == null) return ApartmentMapper.map2TOs(apartmentEntities);
+        apartmentEntities = apartmentDao.findApartmentsByCriteria(apartmentSearchCriteriaTO);
+        return ApartmentMapper.map2TOs(apartmentEntities);
     }
+
 }

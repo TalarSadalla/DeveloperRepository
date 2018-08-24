@@ -1,15 +1,11 @@
 package com.capgemini.mappers;
 
 import com.capgemini.domain.ApartmentEntity;
-import com.capgemini.domain.BuildingEntity;
 import com.capgemini.domain.ClientEntity;
-import com.capgemini.types.BuildingTO;
-import com.capgemini.types.BuildingTO.BuildingTOBuilder;
 import com.capgemini.types.ClientTO;
 import com.capgemini.types.ClientTO.ClientTOBuilder;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 ;

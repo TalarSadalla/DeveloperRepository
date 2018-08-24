@@ -5,8 +5,8 @@ import com.capgemini.domain.BuildingEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 public interface BuildingDao extends CrudRepository<BuildingEntity, Long> {
@@ -32,4 +32,16 @@ public interface BuildingDao extends CrudRepository<BuildingEntity, Long> {
             "ae.status=:status")
     Double numberOfApartmentsInSpecifiedBuildingWithSpecifiedStatus(@Param("buildingId") Long buildingId,
                                                                     @Param("status") String status);
+
+//    @Query("Select count(*) as maks from BuildingEntity be " +
+//            "join be.listOfApartments loa on loa.building.id = be.id " +
+//            "where loa.status='FREE' " +
+//            "group by be.id " +
+//            "having maks=( " +
+//            "Select Max(y.no_of_free_apartments) as maksimum From " +
+//            "(select count(*) as no_of_free_apartments from BuildingEntity be join be.listOfApartments loa on loa.building.id = be.id " +
+//            "where loa.status='FREE' group by be.id) y)"
+//    List<BuildingEntity> buildingWithMostFreeApartments(@Param("status") String status);
+
+
 }

@@ -11,6 +11,9 @@ public class ApartmentSearchCriteriaTO {
     private Integer minBalconyNo;
     private Integer maxBalconyNo;
 
+    public ApartmentSearchCriteriaTO() {
+    }
+
     public ApartmentSearchCriteriaTO(Double minApartmentSize, Double maxApartmentSize, Integer minRoomNo, Integer maxRoomsNo, Integer minBalconyNo, Integer maxBalconyNo) {
         this.minApartmentSize = minApartmentSize;
         this.maxApartmentSize = maxApartmentSize;

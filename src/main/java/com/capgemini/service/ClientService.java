@@ -4,7 +4,6 @@ import com.capgemini.types.ApartmentTO;
 import com.capgemini.types.ClientTO;
 
 import java.util.List;
-import java.util.Set;
 
 
 public interface ClientService {
@@ -22,4 +21,8 @@ public interface ClientService {
     ClientTO buyApartment(ClientTO clientTO, ApartmentTO apartmentTO);
 
     ClientTO makeApartmentReservation(ClientTO clientTO, ApartmentTO apartmentTO);
+
+    Double sumOfBoughtApartmentsPriceForSpecifiedClient(Long clientId);
+
+    List<ClientTO> clientsThatBoughtMoreThanOneApartment();
 }

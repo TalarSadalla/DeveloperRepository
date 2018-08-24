@@ -6,7 +6,6 @@ import com.capgemini.types.BuildingTO;
 import com.capgemini.types.BuildingTO.BuildingTOBuilder;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 ;

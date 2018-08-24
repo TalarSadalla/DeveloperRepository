@@ -1,10 +1,12 @@
 package com.capgemini.service;
 
 import com.capgemini.exceptions.NoSuchApartmentException;
+import com.capgemini.types.ApartmentSearchCriteriaTO;
 import com.capgemini.types.ApartmentTO;
 import com.capgemini.types.ApartmentTO.ApartmentTOBuilder;
 import com.capgemini.types.BuildingTO;
 import com.capgemini.types.BuildingTO.BuildingTOBuilder;
+import com.capgemini.types.ClientTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = "spring.profiles.active=mysql")
+@SpringBootTest(properties = "spring.profiles.active=hsql")
 public class ApartmentServiceTest {
 
     @Autowired
@@ -51,7 +53,7 @@ public class ApartmentServiceTest {
         BuildingTO saveBuilding=buildingService.addNewBuilding(buildingTO);
 
         ApartmentTO apartmentTO=new ApartmentTOBuilder()
-                .withAddress("Murawa")
+                .withAddress("Warszawa")
                 .withStatus("FREE")
                 .withRoomNo(10)
                 .withFloor(2)
@@ -68,13 +70,11 @@ public class ApartmentServiceTest {
 
         apartmentService.addNewApartment(apartmentTO);
 
-        ApartmentTO foundApartment = new ApartmentTO();
-
-          foundApartment= apartmentService.findApartmentByAddress(apartmentTO.getAddress());
+        ApartmentTO foundApartment= apartmentService.findApartmentByAddress(apartmentTO.getAddress());
 
 
         //then
-        assertEquals("Murawa", foundApartment.getAddress());
+        assertEquals("Warszawa", foundApartment.getAddress());
         assertEquals("FREE",foundApartment.getStatus());
         assertEquals((Double)440000.00, foundApartment.getApartmentPrice());
     }
@@ -146,7 +146,6 @@ public class ApartmentServiceTest {
     }
 
     @Test(expected = OptimisticLockingFailureException.class)
-    @Transactional
     public void testShouldUpdateApartmentOptimisticLocking() {
         //given
 
@@ -230,4 +229,525 @@ public class ApartmentServiceTest {
         apartmentService.deleteApartment(foundApartment);
         foundApartment=apartmentService.findApartmentById(foundApartment.getId());
     }
+
+    @Test
+    @Transactional
+    public void shouldFindApartmentByAllSearchCriteria() {
+
+        //given
+        List<Long> apartmentTOSet = new ArrayList<>();
+
+        BuildingTO buildingTO = new BuildingTOBuilder()
+                .withLocalization("Poznan")
+                .withApartmentNumber(32)
+                .withDescription("Nowy Marcelin")
+                .withElevator(true)
+                .withFloorNumber(5)
+                .withListOfApartments(apartmentTOSet)
+                .build();
+
+        BuildingTO foundBuilding = buildingService.addNewBuilding(buildingTO);
+
+        ApartmentTO apartmentTO1 = new ApartmentTOBuilder()
+                .withAddress("Poznan")
+                .withStatus("FREE")
+                .withRoomNo(2)
+                .withFloor(2)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(75.19)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        ApartmentTO apartmentTO2 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(3)
+                .withFloor(0)
+                .withBalconyNo(0)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(67.89)
+                .withApartmentPrice(385000.00)
+                .build();
+
+        ApartmentTO apartmentTO3 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(5)
+                .withFloor(5)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(92.19)
+                .withApartmentPrice(687000.00)
+                .build();
+
+        ApartmentTO apartmentTO4 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(1)
+                .withFloor(0)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(32.81)
+                .withApartmentPrice(227000.00)
+                .build();
+
+        ApartmentTO apartmentTO5 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(3)
+                .withFloor(4)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(54.19)
+                .withApartmentPrice(379000.00)
+                .build();
+
+        ApartmentTO apartmentTO6 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(2)
+                .withFloor(3)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(48.94)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        ClientTO clientTO1 = new ClientTO.ClientTOBuilder()
+                .withFirstName("Talar")
+                .withLastName("Sadalla")
+                .withAddress("Ptasia")
+                .withPhoneNumber("643 454 321")
+                .withApartmentIds(apartmentTOSet)
+                .build();
+
+        ClientTO clientTO2 = new ClientTO.ClientTOBuilder()
+                .withFirstName("Marcin")
+                .withLastName("Janusz")
+                .withAddress("Ptasia")
+                .withPhoneNumber("643 454 321")
+                .withApartmentIds(apartmentTOSet)
+                .build();
+
+        //when
+
+        ApartmentTO foundApartment1 = apartmentService.addNewApartment(apartmentTO1);
+        ApartmentTO foundApartment2 = apartmentService.addNewApartment(apartmentTO2);
+        ApartmentTO foundApartment3 = apartmentService.addNewApartment(apartmentTO3);
+        ApartmentTO foundApartment4 = apartmentService.addNewApartment(apartmentTO4);
+        ApartmentTO foundApartment5 = apartmentService.addNewApartment(apartmentTO5);
+        ApartmentTO foundApartment6 = apartmentService.addNewApartment(apartmentTO6);
+
+        apartmentTOSet.add(foundApartment1.getId());
+        apartmentTOSet.add(foundApartment2.getId());
+        apartmentTOSet.add(foundApartment3.getId());
+        apartmentTOSet.add(foundApartment4.getId());
+
+        apartmentTOSet.add(foundApartment5.getId());
+        apartmentTOSet.add(foundApartment6.getId());
+        foundBuilding.setListOfApartments(apartmentTOSet);
+        foundBuilding = buildingService.updateBuilding(foundBuilding);
+
+        ApartmentSearchCriteriaTO apartmentSearchCriteriaTO=new ApartmentSearchCriteriaTO();
+        apartmentSearchCriteriaTO.setMinApartmentSize(10.0);
+        apartmentSearchCriteriaTO.setMaxApartmentSize(90.0);
+        apartmentSearchCriteriaTO.setMinBalconyNo(1);
+        apartmentSearchCriteriaTO.setMaxBalconyNo(3);
+        apartmentSearchCriteriaTO.setMinRoomNo(1);
+        apartmentSearchCriteriaTO.setMaxRoomsNo(4);
+        List<ApartmentTO> apartmentTOs=apartmentService.findApartmentsByCriteria(apartmentSearchCriteriaTO);
+
+         //then
+        assertEquals(4, apartmentTOs.size());
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindApartmentByTwoSearchCriteriaBalconyNoAndRoomNo() {
+
+        //given
+        List<Long> apartmentTOSet = new ArrayList<>();
+
+        BuildingTO buildingTO = new BuildingTOBuilder()
+                .withLocalization("Poznan")
+                .withApartmentNumber(32)
+                .withDescription("Nowy Marcelin")
+                .withElevator(true)
+                .withFloorNumber(5)
+                .withListOfApartments(apartmentTOSet)
+                .build();
+
+        BuildingTO foundBuilding = buildingService.addNewBuilding(buildingTO);
+
+        ApartmentTO apartmentTO1 = new ApartmentTOBuilder()
+                .withAddress("Poznan")
+                .withStatus("FREE")
+                .withRoomNo(2)
+                .withFloor(2)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(75.19)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        ApartmentTO apartmentTO2 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(3)
+                .withFloor(0)
+                .withBalconyNo(0)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(67.89)
+                .withApartmentPrice(385000.00)
+                .build();
+
+        ApartmentTO apartmentTO3 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(5)
+                .withFloor(5)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(92.19)
+                .withApartmentPrice(687000.00)
+                .build();
+
+        ApartmentTO apartmentTO4 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(1)
+                .withFloor(0)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(32.81)
+                .withApartmentPrice(227000.00)
+                .build();
+
+        ApartmentTO apartmentTO5 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(3)
+                .withFloor(4)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(54.19)
+                .withApartmentPrice(379000.00)
+                .build();
+
+        ApartmentTO apartmentTO6 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(2)
+                .withFloor(3)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(48.94)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        ClientTO clientTO1 = new ClientTO.ClientTOBuilder()
+                .withFirstName("Talar")
+                .withLastName("Sadalla")
+                .withAddress("Ptasia")
+                .withPhoneNumber("643 454 321")
+                .withApartmentIds(apartmentTOSet)
+                .build();
+
+        ClientTO clientTO2 = new ClientTO.ClientTOBuilder()
+                .withFirstName("Marcin")
+                .withLastName("Janusz")
+                .withAddress("Ptasia")
+                .withPhoneNumber("643 454 321")
+                .withApartmentIds(apartmentTOSet)
+                .build();
+
+        //when
+
+        ApartmentTO foundApartment1 = apartmentService.addNewApartment(apartmentTO1);
+        ApartmentTO foundApartment2 = apartmentService.addNewApartment(apartmentTO2);
+        ApartmentTO foundApartment3 = apartmentService.addNewApartment(apartmentTO3);
+        ApartmentTO foundApartment4 = apartmentService.addNewApartment(apartmentTO4);
+        ApartmentTO foundApartment5 = apartmentService.addNewApartment(apartmentTO5);
+        ApartmentTO foundApartment6 = apartmentService.addNewApartment(apartmentTO6);
+
+        apartmentTOSet.add(foundApartment1.getId());
+        apartmentTOSet.add(foundApartment2.getId());
+        apartmentTOSet.add(foundApartment3.getId());
+        apartmentTOSet.add(foundApartment4.getId());
+
+        apartmentTOSet.add(foundApartment5.getId());
+        apartmentTOSet.add(foundApartment6.getId());
+        foundBuilding.setListOfApartments(apartmentTOSet);
+        foundBuilding = buildingService.updateBuilding(foundBuilding);
+
+        ApartmentSearchCriteriaTO apartmentSearchCriteriaTO=new ApartmentSearchCriteriaTO();
+        apartmentSearchCriteriaTO.setMinBalconyNo(1);
+        apartmentSearchCriteriaTO.setMaxBalconyNo(3);
+        apartmentSearchCriteriaTO.setMinRoomNo(1);
+        apartmentSearchCriteriaTO.setMaxRoomsNo(4);
+        List<ApartmentTO> apartmentTOs=apartmentService.findApartmentsByCriteria(apartmentSearchCriteriaTO);
+
+        //then
+        assertEquals(4, apartmentTOs.size());
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindApartmentByTwoSearchCriteriaApartmentSizeAndRoomNo() {
+
+        //given
+        List<Long> apartmentTOSet = new ArrayList<>();
+
+        BuildingTO buildingTO = new BuildingTOBuilder()
+                .withLocalization("Poznan")
+                .withApartmentNumber(32)
+                .withDescription("Nowy Marcelin")
+                .withElevator(true)
+                .withFloorNumber(5)
+                .withListOfApartments(apartmentTOSet)
+                .build();
+
+        BuildingTO foundBuilding = buildingService.addNewBuilding(buildingTO);
+
+        ApartmentTO apartmentTO1 = new ApartmentTOBuilder()
+                .withAddress("Poznan")
+                .withStatus("FREE")
+                .withRoomNo(2)
+                .withFloor(2)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(75.19)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        ApartmentTO apartmentTO2 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(3)
+                .withFloor(0)
+                .withBalconyNo(0)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(67.89)
+                .withApartmentPrice(385000.00)
+                .build();
+
+        ApartmentTO apartmentTO3 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(5)
+                .withFloor(5)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(92.19)
+                .withApartmentPrice(687000.00)
+                .build();
+
+        ApartmentTO apartmentTO4 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(1)
+                .withFloor(0)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(32.81)
+                .withApartmentPrice(227000.00)
+                .build();
+
+        ApartmentTO apartmentTO5 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(3)
+                .withFloor(4)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(54.19)
+                .withApartmentPrice(379000.00)
+                .build();
+
+        ApartmentTO apartmentTO6 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(2)
+                .withFloor(3)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(48.94)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        ClientTO clientTO1 = new ClientTO.ClientTOBuilder()
+                .withFirstName("Talar")
+                .withLastName("Sadalla")
+                .withAddress("Ptasia")
+                .withPhoneNumber("643 454 321")
+                .withApartmentIds(apartmentTOSet)
+                .build();
+
+        ClientTO clientTO2 = new ClientTO.ClientTOBuilder()
+                .withFirstName("Marcin")
+                .withLastName("Janusz")
+                .withAddress("Ptasia")
+                .withPhoneNumber("643 454 321")
+                .withApartmentIds(apartmentTOSet)
+                .build();
+
+        //when
+
+        ApartmentTO foundApartment1 = apartmentService.addNewApartment(apartmentTO1);
+        ApartmentTO foundApartment2 = apartmentService.addNewApartment(apartmentTO2);
+        ApartmentTO foundApartment3 = apartmentService.addNewApartment(apartmentTO3);
+        ApartmentTO foundApartment4 = apartmentService.addNewApartment(apartmentTO4);
+        ApartmentTO foundApartment5 = apartmentService.addNewApartment(apartmentTO5);
+        ApartmentTO foundApartment6 = apartmentService.addNewApartment(apartmentTO6);
+
+        apartmentTOSet.add(foundApartment1.getId());
+        apartmentTOSet.add(foundApartment2.getId());
+        apartmentTOSet.add(foundApartment3.getId());
+        apartmentTOSet.add(foundApartment4.getId());
+
+        apartmentTOSet.add(foundApartment5.getId());
+        apartmentTOSet.add(foundApartment6.getId());
+        foundBuilding.setListOfApartments(apartmentTOSet);
+        foundBuilding = buildingService.updateBuilding(foundBuilding);
+
+        ApartmentSearchCriteriaTO apartmentSearchCriteriaTO=new ApartmentSearchCriteriaTO();
+        apartmentSearchCriteriaTO.setMinApartmentSize(30.00);
+        apartmentSearchCriteriaTO.setMaxApartmentSize(50.00);
+        apartmentSearchCriteriaTO.setMinRoomNo(1);
+        apartmentSearchCriteriaTO.setMaxRoomsNo(4);
+        List<ApartmentTO> apartmentTOs=apartmentService.findApartmentsByCriteria(apartmentSearchCriteriaTO);
+
+        //then
+        assertEquals(2, apartmentTOs.size());
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindApartmentByOneSearchCriteria() {
+
+        //given
+        List<Long> apartmentTOSet = new ArrayList<>();
+
+        BuildingTO buildingTO = new BuildingTOBuilder()
+                .withLocalization("Poznan")
+                .withApartmentNumber(32)
+                .withDescription("Nowy Marcelin")
+                .withElevator(true)
+                .withFloorNumber(5)
+                .withListOfApartments(apartmentTOSet)
+                .build();
+
+        BuildingTO foundBuilding = buildingService.addNewBuilding(buildingTO);
+
+        ApartmentTO apartmentTO1 = new ApartmentTOBuilder()
+                .withAddress("Poznan")
+                .withStatus("FREE")
+                .withRoomNo(2)
+                .withFloor(2)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(75.19)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        ApartmentTO apartmentTO2 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(3)
+                .withFloor(0)
+                .withBalconyNo(0)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(67.89)
+                .withApartmentPrice(385000.00)
+                .build();
+
+        ApartmentTO apartmentTO3 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(5)
+                .withFloor(5)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(92.19)
+                .withApartmentPrice(687000.00)
+                .build();
+
+        ApartmentTO apartmentTO4 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(1)
+                .withFloor(0)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(32.81)
+                .withApartmentPrice(227000.00)
+                .build();
+
+        ApartmentTO apartmentTO5 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(3)
+                .withFloor(4)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(54.19)
+                .withApartmentPrice(379000.00)
+                .build();
+
+        ApartmentTO apartmentTO6 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(2)
+                .withFloor(3)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(48.94)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        ClientTO clientTO1 = new ClientTO.ClientTOBuilder()
+                .withFirstName("Talar")
+                .withLastName("Sadalla")
+                .withAddress("Ptasia")
+                .withPhoneNumber("643 454 321")
+                .withApartmentIds(apartmentTOSet)
+                .build();
+
+        ClientTO clientTO2 = new ClientTO.ClientTOBuilder()
+                .withFirstName("Marcin")
+                .withLastName("Janusz")
+                .withAddress("Ptasia")
+                .withPhoneNumber("643 454 321")
+                .withApartmentIds(apartmentTOSet)
+                .build();
+
+        //when
+
+        ApartmentTO foundApartment1 = apartmentService.addNewApartment(apartmentTO1);
+        ApartmentTO foundApartment2 = apartmentService.addNewApartment(apartmentTO2);
+        ApartmentTO foundApartment3 = apartmentService.addNewApartment(apartmentTO3);
+        ApartmentTO foundApartment4 = apartmentService.addNewApartment(apartmentTO4);
+        ApartmentTO foundApartment5 = apartmentService.addNewApartment(apartmentTO5);
+        ApartmentTO foundApartment6 = apartmentService.addNewApartment(apartmentTO6);
+
+        apartmentTOSet.add(foundApartment1.getId());
+        apartmentTOSet.add(foundApartment2.getId());
+        apartmentTOSet.add(foundApartment3.getId());
+        apartmentTOSet.add(foundApartment4.getId());
+
+        apartmentTOSet.add(foundApartment5.getId());
+        apartmentTOSet.add(foundApartment6.getId());
+        foundBuilding.setListOfApartments(apartmentTOSet);
+        foundBuilding = buildingService.updateBuilding(foundBuilding);
+
+        ApartmentSearchCriteriaTO apartmentSearchCriteriaTO=new ApartmentSearchCriteriaTO();
+        apartmentSearchCriteriaTO.setMinBalconyNo(2);
+        apartmentSearchCriteriaTO.setMaxBalconyNo(4);
+        List<ApartmentTO> apartmentTOs=apartmentService.findApartmentsByCriteria(apartmentSearchCriteriaTO);
+
+        //then
+        assertEquals(3, apartmentTOs.size());
+    }
+
 }

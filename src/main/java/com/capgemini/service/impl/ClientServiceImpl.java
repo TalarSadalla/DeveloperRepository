@@ -14,12 +14,14 @@ import com.capgemini.types.ClientTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ClientServiceImpl implements ClientService {
 
     @Autowired
@@ -106,6 +108,22 @@ public class ClientServiceImpl implements ClientService {
         clientEntity = clientDao.save(clientEntity);
 
         return ClientMapper.toClientTO(clientEntity);
+    }
+
+    @Override
+    public Double sumOfBoughtApartmentsPriceForSpecifiedClient(Long clientId) {
+        ClientEntity clientEntity = clientDao.findById(clientId).orElseThrow(NoSuchClientException::new);
+        Double apartmentsPrice = clientDao.sumOfBoughtApartmentsPriceForSpecifiedCLient(clientEntity.getId(), "BOUGHT");
+        if (apartmentsPrice == null)
+            return Double.valueOf(0);
+        return apartmentsPrice;
+    }
+
+    @Override
+    public List<ClientTO> clientsThatBoughtMoreThanOneApartment() {
+        List<ClientEntity> clientEntities = clientDao.clientsThatBoughtMoreThanOneApartment();
+        if (clientEntities.isEmpty() || clientEntities == null) return null;
+        return ClientMapper.map2TOs(clientEntities);
     }
 
     private List<ApartmentEntity> getListOfApartments(ClientTO clientTO) {

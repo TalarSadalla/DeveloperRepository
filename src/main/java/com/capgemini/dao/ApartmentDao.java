@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 
-public interface ApartmentDao extends CrudRepository<ApartmentEntity, Long> {
+public interface ApartmentDao extends CrudRepository<ApartmentEntity, Long>, CustomizedApartmentDao {
 
     ApartmentEntity findApartmentByApartmentSize(Double apartmentSize);
 

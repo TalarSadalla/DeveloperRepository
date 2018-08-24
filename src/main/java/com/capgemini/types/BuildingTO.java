@@ -1,10 +1,8 @@
 package com.capgemini.types;
 
-import com.capgemini.domain.ApartmentEntity;
-import org.springframework.util.CollectionUtils;
-
-import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 public class BuildingTO {
@@ -191,13 +189,13 @@ public class BuildingTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BuildingTO that = (BuildingTO) o;
-        return version == that.version &&
-                floorNo == that.floorNo &&
-                isElevator == that.isElevator &&
-                apartmentNo == that.apartmentNo &&
+        return isElevator == that.isElevator &&
+                Objects.equals(version, that.version) &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(localization, that.localization) &&
+                Objects.equals(floorNo, that.floorNo) &&
+                Objects.equals(apartmentNo, that.apartmentNo) &&
                 Objects.equals(listOfApartments, that.listOfApartments);
     }
 

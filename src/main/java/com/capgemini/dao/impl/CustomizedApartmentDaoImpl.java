@@ -1,6 +1,5 @@
 package com.capgemini.dao.impl;
 
-import com.capgemini.dao.AbstractDao;
 import com.capgemini.dao.CustomizedApartmentDao;
 import com.capgemini.domain.ApartmentEntity;
 import com.capgemini.types.ApartmentSearchCriteriaTO;
@@ -12,43 +11,43 @@ public class CustomizedApartmentDaoImpl extends AbstractDaoImpl<ApartmentEntity,
     @Override
     public List<ApartmentEntity> findApartmentsByCriteria(ApartmentSearchCriteriaTO apartmentSearchCriteriaTO) {
         StringBuilder queryBuilder = new StringBuilder();
+        boolean andFlagNeeded = false;
         queryBuilder.append("select a from ApartmentEntity a where ");
-        boolean canAppendQueryByAnd = false;
 
         if (apartmentSearchCriteriaTO.getMinApartmentSize() != null) {
             queryBuilder.append("a.apartmentSize >= :minApartmentSize");
-            canAppendQueryByAnd = true;
+            andFlagNeeded = true;
         }
         if (apartmentSearchCriteriaTO.getMaxApartmentSize() != null) {
-            if (canAppendQueryByAnd) {
+            if (andFlagNeeded) {
                 queryBuilder.append(" and ");
             }
             queryBuilder.append("a.apartmentSize <= :maxApartmentSize");
-            canAppendQueryByAnd = true;
+            andFlagNeeded = true;
         }
         if (apartmentSearchCriteriaTO.getMinRoomNo() != null) {
-            if (canAppendQueryByAnd) {
+            if (andFlagNeeded) {
                 queryBuilder.append(" and ");
             }
             queryBuilder.append("a.roomNo >= :minRoomNo");
-            canAppendQueryByAnd = true;
+            andFlagNeeded = true;
         }
         if (apartmentSearchCriteriaTO.getMaxRoomsNo() != null) {
-            if (canAppendQueryByAnd) {
+            if (andFlagNeeded) {
                 queryBuilder.append(" and ");
             }
             queryBuilder.append("a.roomNo <= :maxRoomNo");
-            canAppendQueryByAnd = true;
+            andFlagNeeded = true;
         }
         if (apartmentSearchCriteriaTO.getMinBalconyNo() != null) {
-            if (canAppendQueryByAnd) {
+            if (andFlagNeeded) {
                 queryBuilder.append(" and ");
             }
             queryBuilder.append("a.balconyNo >= :minBalconyNo");
-            canAppendQueryByAnd = true;
+            andFlagNeeded = true;
         }
         if (apartmentSearchCriteriaTO.getMaxBalconyNo() != null) {
-            if (canAppendQueryByAnd) {
+            if (andFlagNeeded) {
                 queryBuilder.append(" and ");
             }
             queryBuilder.append("a.balconyNo <= :maxBalconyNo");

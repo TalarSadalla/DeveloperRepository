@@ -5,10 +5,8 @@ import com.capgemini.domain.ClientEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ClientDao extends CrudRepository<ClientEntity, Long> {
 
@@ -27,9 +25,11 @@ public interface ClientDao extends CrudRepository<ClientEntity, Long> {
 
     @Query("select sum(aes.apartmentPrice) from ClientEntity c " +
             "join c.apartmentEntitySet aes on c.id = :clientId " +
-            "where aes.status=BOUGHT")
-    Double sumOfBoughtApartmentsPriceForSpecifiedCLient(@Param("clientId") Long apartmentId);
+            "where aes.status=:status")
+    Double sumOfBoughtApartmentsPriceForSpecifiedCLient(@Param("clientId") Long clientId, @Param("status") String status);
 
-    @Query("select c from ClientEntity c join c.apartmentEntitySet aes on c.id = :clientId where aes.status=BOUGHT AND count(c.apartmentEntitySet.size)>1")
-    List<ClientEntity> clientsThatBoughtMoreThanOneApartment(@Param("clientId") Long apartmentId);
+    @Query("select c from ClientEntity c join c.apartmentEntitySet aes " +
+            "where (select count(*) from aes where upper(aes.status) LIKE 'BOUGHT')>1 " +
+            "Group by c.id")
+    List<ClientEntity> clientsThatBoughtMoreThanOneApartment();
 }

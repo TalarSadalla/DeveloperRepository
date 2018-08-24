@@ -1,9 +1,9 @@
 package com.capgemini.service;
 
-import com.capgemini.types.ApartmentTO;
+import com.capgemini.exceptions.NoSuchBuildingException;
 import com.capgemini.types.BuildingTO;
 
-import java.util.Set;
+import java.util.List;
 
 
 public interface BuildingService {
@@ -12,9 +12,11 @@ public interface BuildingService {
 
     BuildingTO updateBuilding(BuildingTO buildingTO);
 
-    void deleteBuilding(BuildingTO buildingTO);
+    void deleteBuilding(BuildingTO buildingTO) throws NoSuchBuildingException;
 
-    BuildingTO findBuildingById(Long id);
+    BuildingTO findBuildingById(Long id) throws NoSuchBuildingException;
 
-    BuildingTO findBuildingByLocalization(String localization) ;
+    BuildingTO findBuildingByLocalization(String localization) throws NoSuchBuildingException;
+
+    Double numberOfApartmentsInSpecifiedBuildingWithSpecifiedStatus(Long buildingId, String status);
 }

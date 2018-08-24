@@ -1,6 +1,8 @@
 package com.capgemini.types;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class ClientTO {
 
@@ -162,7 +164,7 @@ public class ClientTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClientTO clientTO = (ClientTO) o;
-        return version == clientTO.version &&
+        return Objects.equals(version, clientTO.version) &&
                 Objects.equals(id, clientTO.id) &&
                 Objects.equals(firstName, clientTO.firstName) &&
                 Objects.equals(lastName, clientTO.lastName) &&

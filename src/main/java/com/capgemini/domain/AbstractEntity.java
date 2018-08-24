@@ -1,9 +1,14 @@
 package com.capgemini.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+
 
 @MappedSuperclass
 public abstract class AbstractEntity implements Serializable {

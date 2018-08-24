@@ -1,9 +1,7 @@
 package com.capgemini.types;
 
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 public class ApartmentTO {
 
@@ -237,15 +235,15 @@ public class ApartmentTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ApartmentTO that = (ApartmentTO) o;
-        return version == that.version &&
-                Double.compare(that.apartmentSize, apartmentSize) == 0 &&
-                roomNo == that.roomNo &&
-                balconyNo == that.balconyNo &&
-                floor == that.floor &&
-                Double.compare(that.apartmentPrice, apartmentPrice) == 0 &&
+        return Objects.equals(version, that.version) &&
                 Objects.equals(id, that.id) &&
+                Objects.equals(apartmentSize, that.apartmentSize) &&
+                Objects.equals(roomNo, that.roomNo) &&
+                Objects.equals(balconyNo, that.balconyNo) &&
+                Objects.equals(floor, that.floor) &&
                 Objects.equals(address, that.address) &&
                 Objects.equals(status, that.status) &&
+                Objects.equals(apartmentPrice, that.apartmentPrice) &&
                 Objects.equals(buildingId, that.buildingId);
     }
 
