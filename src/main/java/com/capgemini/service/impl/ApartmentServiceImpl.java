@@ -90,4 +90,9 @@ public class ApartmentServiceImpl implements ApartmentService {
         return ApartmentMapper.map2TOs(apartmentEntities);
     }
 
+    @Override
+    public List<ApartmentTO> findApartmentsForDisabledClients() {
+        return ApartmentMapper.map2TOs(apartmentDao.findApartmentsForDisabledClients());
+    }
+
 }

@@ -696,4 +696,125 @@ public class BuildingServiceTest {
         assertEquals(1, noOfFreeApartments.doubleValue(),1.0);
     }
 
+    @Test
+    @Transactional
+    public void shouldFindAveragePriceOfApartmentInSpecifiedBuilding() {
+
+        //given
+        List<Long> apartmentTOSet = new ArrayList<>();
+
+        BuildingTO buildingTO = new BuildingTOBuilder()
+                .withLocalization("Poznan")
+                .withApartmentNumber(32)
+                .withDescription("Nowy Marcelin")
+                .withElevator(false)
+                .withFloorNumber(5)
+                .withListOfApartments(apartmentTOSet)
+                .build();
+
+        BuildingTO foundBuilding = buildingService.addNewBuilding(buildingTO);
+
+        ApartmentTO apartmentTO1 = new ApartmentTOBuilder()
+                .withAddress("Poznan")
+                .withStatus("FREE")
+                .withRoomNo(2)
+                .withFloor(2)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(75.19)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        ApartmentTO apartmentTO2 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(3)
+                .withFloor(0)
+                .withBalconyNo(0)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(67.89)
+                .withApartmentPrice(385000.00)
+                .build();
+
+        ApartmentTO apartmentTO3 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(5)
+                .withFloor(5)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(92.19)
+                .withApartmentPrice(687000.00)
+                .build();
+
+        ApartmentTO apartmentTO4 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(1)
+                .withFloor(0)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(32.81)
+                .withApartmentPrice(227000.00)
+                .build();
+
+        ApartmentTO apartmentTO5 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(3)
+                .withFloor(4)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(54.19)
+                .withApartmentPrice(379000.00)
+                .build();
+
+        ApartmentTO apartmentTO6 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(2)
+                .withFloor(3)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(48.94)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        //when
+
+        ApartmentTO foundApartment1 = apartmentService.addNewApartment(apartmentTO1);
+        ApartmentTO foundApartment2 = apartmentService.addNewApartment(apartmentTO2);
+        ApartmentTO foundApartment3 = apartmentService.addNewApartment(apartmentTO3);
+        ApartmentTO foundApartment4 = apartmentService.addNewApartment(apartmentTO4);
+        ApartmentTO foundApartment5 = apartmentService.addNewApartment(apartmentTO5);
+        ApartmentTO foundApartment6 = apartmentService.addNewApartment(apartmentTO6);
+
+        apartmentTOSet.add(foundApartment1.getId());
+        apartmentTOSet.add(foundApartment2.getId());
+        apartmentTOSet.add(foundApartment3.getId());
+        apartmentTOSet.add(foundApartment4.getId());
+
+        apartmentTOSet.add(foundApartment5.getId());
+        apartmentTOSet.add(foundApartment6.getId());
+        foundBuilding.setListOfApartments(apartmentTOSet);
+
+        List<ApartmentTO> listOfApartments=new ArrayList<>();
+        listOfApartments.add(foundApartment1);
+        listOfApartments.add(foundApartment2);
+        listOfApartments.add(foundApartment3);
+        listOfApartments.add(foundApartment4);
+        listOfApartments.add(foundApartment5);
+        listOfApartments.add(foundApartment6);
+
+
+        Double apartmentAvgSum=0.0;
+        for(int i=0;i<apartmentTOSet.size();i++){
+            apartmentAvgSum=apartmentAvgSum+listOfApartments.get(i).getApartmentPrice();
+        }
+
+        //then
+        assertEquals(apartmentAvgSum/listOfApartments.size(),buildingService.averagePriceOfApartmentsInSpecifiedBuilding(foundBuilding.getId()),1.0);
+    }
+
+
 }

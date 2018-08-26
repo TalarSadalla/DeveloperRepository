@@ -155,7 +155,7 @@ public class ApartmentServiceTest {
                 .withLocalization("Poznan")
                 .withApartmentNumber(32)
                 .withDescription("Nowy Marcelin")
-                .withElevator(true)
+                .withElevator(false)
                 .withFloorNumber(5)
                 .withListOfApartments(listOfApartmentsId)
                 .build();
@@ -749,5 +749,128 @@ public class ApartmentServiceTest {
         //then
         assertEquals(3, apartmentTOs.size());
     }
+
+    @Test
+    @Transactional
+    public void shouldfFindApartmentsForDisabledClients() {
+
+        //given
+        List<Long> apartmentTOSet1 = new ArrayList<>();
+        List<Long> apartmentTOSet2 = new ArrayList<>();
+
+        BuildingTO buildingTO = new BuildingTOBuilder()
+                .withLocalization("Poznan")
+                .withApartmentNumber(32)
+                .withDescription("Nowy Marcelin")
+                .withElevator(true)
+                .withFloorNumber(5)
+                .withListOfApartments(apartmentTOSet1)
+                .build();
+
+        BuildingTO buildingTO2 = new BuildingTOBuilder()
+                .withLocalization("Poznan")
+                .withApartmentNumber(10)
+                .withDescription("Nowy Targ")
+                .withElevator(false)
+                .withFloorNumber(5)
+                .withListOfApartments(apartmentTOSet2)
+                .build();
+
+        BuildingTO foundBuilding = buildingService.addNewBuilding(buildingTO);
+        BuildingTO foundBuilding2 = buildingService.addNewBuilding(buildingTO2);
+
+        ApartmentTO apartmentTO1 = new ApartmentTOBuilder()
+                .withAddress("Poznan")
+                .withStatus("FREE")
+                .withRoomNo(2)
+                .withFloor(2)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(75.19)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        ApartmentTO apartmentTO2 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(3)
+                .withFloor(0)
+                .withBalconyNo(0)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(67.89)
+                .withApartmentPrice(385000.00)
+                .build();
+
+        ApartmentTO apartmentTO3 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(5)
+                .withFloor(5)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding.getId())
+                .withApartmentSize(92.19)
+                .withApartmentPrice(687000.00)
+                .build();
+
+        ApartmentTO apartmentTO4 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("RESERVATION")
+                .withRoomNo(1)
+                .withFloor(0)
+                .withBalconyNo(2)
+                .withBuildingId(foundBuilding2.getId())
+                .withApartmentSize(32.81)
+                .withApartmentPrice(227000.00)
+                .build();
+
+        ApartmentTO apartmentTO5 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(3)
+                .withFloor(0)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding2.getId())
+                .withApartmentSize(54.19)
+                .withApartmentPrice(379000.00)
+                .build();
+
+        ApartmentTO apartmentTO6 = new ApartmentTOBuilder()
+                .withAddress("Murawa")
+                .withStatus("BOUGHT")
+                .withRoomNo(2)
+                .withFloor(3)
+                .withBalconyNo(1)
+                .withBuildingId(foundBuilding2.getId())
+                .withApartmentSize(48.94)
+                .withApartmentPrice(440000.00)
+                .build();
+
+        //when
+
+        ApartmentTO foundApartment1 = apartmentService.addNewApartment(apartmentTO1);
+        ApartmentTO foundApartment2 = apartmentService.addNewApartment(apartmentTO2);
+        ApartmentTO foundApartment3 = apartmentService.addNewApartment(apartmentTO3);
+        ApartmentTO foundApartment4 = apartmentService.addNewApartment(apartmentTO4);
+        ApartmentTO foundApartment5 = apartmentService.addNewApartment(apartmentTO5);
+        ApartmentTO foundApartment6 = apartmentService.addNewApartment(apartmentTO6);
+
+        apartmentTOSet1.add(foundApartment1.getId());
+        apartmentTOSet1.add(foundApartment2.getId());
+        apartmentTOSet1.add(foundApartment3.getId());
+        apartmentTOSet2.add(foundApartment4.getId());
+
+        apartmentTOSet2.add(foundApartment5.getId());
+        apartmentTOSet2.add(foundApartment6.getId());
+        foundBuilding.setListOfApartments(apartmentTOSet1);
+        foundBuilding2.setListOfApartments(apartmentTOSet2);
+        foundBuilding = buildingService.updateBuilding(foundBuilding);
+        foundBuilding2 = buildingService.updateBuilding(foundBuilding2);
+
+        List<ApartmentTO> apartmentTOs2=apartmentService.findApartmentsForDisabledClients();
+
+        //then
+        assertEquals(5, apartmentTOs2.size());
+    }
+
 
 }

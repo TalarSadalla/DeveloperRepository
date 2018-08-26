@@ -85,4 +85,11 @@ public class BuildingServiceImpl implements BuildingService {
         } else throw new NoSuchBuildingException("No such building with this id");
         return numberOfApartments;
     }
+
+    @Override
+    public Double averagePriceOfApartmentsInSpecifiedBuilding(Long buildingId) {
+        BuildingEntity buildingEntity = buildingDao.findById(buildingId).orElseThrow(NoSuchBuildingException::new);
+        Double averageBuildingPrice = buildingDao.averagePriceOfApartmentsInSpecifiedBuilding(buildingId);
+        return averageBuildingPrice;
+    }
 }

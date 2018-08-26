@@ -19,4 +19,6 @@ public interface BuildingService {
     BuildingTO findBuildingByLocalization(String localization) throws NoSuchBuildingException;
 
     Double numberOfApartmentsInSpecifiedBuildingWithSpecifiedStatus(Long buildingId, String status);
+
+    Double averagePriceOfApartmentsInSpecifiedBuilding(Long buildingId);
 }

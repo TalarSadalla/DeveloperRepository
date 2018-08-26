@@ -20,4 +20,5 @@ public interface ApartmentService {
 
     List<ApartmentTO> findApartmentsByCriteria(ApartmentSearchCriteriaTO apartmentSearchCriteriaTO);
 
+    List<ApartmentTO> findApartmentsForDisabledClients();
 }
