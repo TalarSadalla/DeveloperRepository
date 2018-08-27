@@ -12,6 +12,12 @@ import java.util.stream.Collectors;
 
 public class ClientMapper {
 
+    /**
+     * Map Client Entity to Client Transfer Object
+     *
+     * @param clientEntity client entity to map
+     * @return mapped client entity to transfer object
+     */
     public static ClientTO toClientTO(ClientEntity clientEntity) {
         if (clientEntity == null)
             return null;
@@ -31,6 +37,12 @@ public class ClientMapper {
 
     }
 
+    /**
+     * Map Client Transfer Object to Client Entity
+     *
+     * @param clientTO client TO to map
+     * @return mapped client transfer object to entity
+     */
     public static ClientEntity toClientEntity(ClientTO clientTO) {
         if (clientTO == null)
             return null;
@@ -44,10 +56,22 @@ public class ClientMapper {
         return clientEntity;
     }
 
+    /**
+     * Map list Client Entity to Client Transfer Object
+     *
+     * @param clientEntities client entity to map
+     * @return mapped list of client entity to list of transfer object
+     */
     public static List<ClientTO> map2TOs(List<ClientEntity> clientEntities) {
         return clientEntities.stream().map(ClientMapper::toClientTO).collect(Collectors.toList());
     }
 
+    /**
+     * Map list of Client Transfer Object to list Client Entity
+     *
+     * @param clientTOs client TO to map
+     * @return mapped list of client transfer object to list of entities
+     */
     public static List<ClientEntity> map2Entities(List<ClientTO> clientTOs) {
         return clientTOs.stream().map(ClientMapper::toClientEntity).collect(Collectors.toList());
     }

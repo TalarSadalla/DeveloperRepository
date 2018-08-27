@@ -1,6 +1,9 @@
 package com.capgemini.exceptions;
 
-public class NoSuchApartmentException extends RuntimeException {
+/**
+ * Custom Apartment exception if Apartment does not exist
+ */
+public class NoSuchApartmentException extends Exception {
     public NoSuchApartmentException() {
 
     }

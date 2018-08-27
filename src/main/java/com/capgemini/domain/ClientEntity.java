@@ -17,8 +17,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Client entity
+ */
 @Entity
-@Table(name = "CLIENT")
+@Table(name = "clients")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @EntityListeners({OnCreateListener.class, OnUpdateListener.class})
 public class ClientEntity extends AbstractEntity implements Serializable {

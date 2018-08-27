@@ -16,6 +16,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Building Entity
+ */
 @Entity
 @Table(name = "buildings")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -43,7 +46,7 @@ public class BuildingEntity extends AbstractEntity implements Serializable {
     @Column(nullable = false)
     int apartmentNo;
 
-    @OneToMany(mappedBy = "building", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @OneToMany(mappedBy = "building", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     List<ApartmentEntity> listOfApartments = new ArrayList<>();
 
 

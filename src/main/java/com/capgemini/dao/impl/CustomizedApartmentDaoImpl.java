@@ -2,16 +2,36 @@ package com.capgemini.dao.impl;
 
 import com.capgemini.dao.CustomizedApartmentDao;
 import com.capgemini.domain.ApartmentEntity;
+import com.capgemini.exceptions.CriteriaSearchException;
 import com.capgemini.types.ApartmentSearchCriteriaTO;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+/**
+ * Custom Apartment Dao Implementation
+ */
 public class CustomizedApartmentDaoImpl extends AbstractDaoImpl<ApartmentEntity, Long> implements CustomizedApartmentDao {
+
+    /**
+     *
+     * @param apartmentSearchCriteriaTO possible criteria of apartment search
+     * @return List of Apartments that fulfill the search criteria
+     * @throws CriteriaSearchException when there are no such Criteria
+     */
     @Override
-    public List<ApartmentEntity> findApartmentsByCriteria(ApartmentSearchCriteriaTO apartmentSearchCriteriaTO) {
+    public List<ApartmentEntity> findApartmentsByCriteria(ApartmentSearchCriteriaTO apartmentSearchCriteriaTO) throws CriteriaSearchException {
         StringBuilder queryBuilder = new StringBuilder();
         boolean andFlagNeeded = false;
+        if (apartmentSearchCriteriaTO == null ||
+                (apartmentSearchCriteriaTO.getMinApartmentSize() == null &&
+                        apartmentSearchCriteriaTO.getMaxApartmentSize() == null &&
+                        apartmentSearchCriteriaTO.getMinBalconyNo() == null &&
+                        apartmentSearchCriteriaTO.getMaxBalconyNo() == null &&
+                        apartmentSearchCriteriaTO.getMinRoomNo() == null &&
+                        apartmentSearchCriteriaTO.getMaxRoomsNo() == null)) {
+            throw new CriteriaSearchException("No search criteria !");
+        }
         queryBuilder.append("select a from ApartmentEntity a where ");
 
         if (apartmentSearchCriteriaTO.getMinApartmentSize() != null) {

@@ -1,6 +1,9 @@
 package com.capgemini.exceptions;
 
-public class NoSuchClientException extends RuntimeException {
+/**
+ * Custom Client exception if Client does not exist
+ */
+public class NoSuchClientException extends Exception {
     public NoSuchClientException() {
 
     }

@@ -1,5 +1,6 @@
 package com.capgemini.service;
 
+import com.capgemini.exceptions.NoSuchApartmentException;
 import com.capgemini.exceptions.NoSuchBuildingException;
 import com.capgemini.types.BuildingTO;
 
@@ -16,9 +17,9 @@ public interface BuildingService {
 
     BuildingTO findBuildingById(Long id) throws NoSuchBuildingException;
 
-    BuildingTO findBuildingByLocalization(String localization) throws NoSuchBuildingException;
+    Double numberOfApartmentsInSpecifiedBuildingWithSpecifiedStatus(Long buildingId, String status) throws NoSuchApartmentException, NoSuchBuildingException;
 
-    Double numberOfApartmentsInSpecifiedBuildingWithSpecifiedStatus(Long buildingId, String status);
+    Double averagePriceOfApartmentsInSpecifiedBuilding(Long buildingId) throws NoSuchBuildingException;
 
-    Double averagePriceOfApartmentsInSpecifiedBuilding(Long buildingId);
+    List<BuildingTO> findBuildingWithMostFreeApartments() throws NoSuchBuildingException;
 }

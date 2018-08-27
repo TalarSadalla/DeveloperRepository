@@ -14,6 +14,9 @@ import javax.persistence.Table;
 import javax.persistence.InheritanceType;
 import java.io.Serializable;
 
+/**
+ * Apartment Entity
+ */
 @Entity
 @Table(name = "apartments")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)

@@ -50,7 +50,7 @@ public class BuildingServiceImpl implements BuildingService {
     @Override
     public void deleteBuilding(BuildingTO buildingTO) throws NoSuchBuildingException {
         Optional<BuildingEntity> optionalEntityToDelete = buildingDao.findById(buildingTO.getId());
-        if (optionalEntityToDelete.isPresent()) buildingDao.delete(BuildingMapper.toBuildingEntity(buildingTO));
+        if (optionalEntityToDelete.isPresent()) buildingDao.delete(optionalEntityToDelete.get());
         else throw new NoSuchBuildingException("No such building with this id");
     }
 
@@ -64,16 +64,17 @@ public class BuildingServiceImpl implements BuildingService {
         }
     }
 
-
+    /**
+     * Find number of apartments in the building with specified status
+     *
+     * @param buildingId building id
+     * @param status     apartment status that is located in the building
+     * @return Number of apartments with specified status
+     * @throws NoSuchApartmentException if there are no such apartments with specified status
+     * @throws NoSuchBuildingException  if building does not exist
+     */
     @Override
-    public BuildingTO findBuildingByLocalization(String localization) throws NoSuchBuildingException {
-        if (buildingDao.findBuildingByLocalization(localization) == null) {
-            throw new NoSuchBuildingException("No such building with this localization");
-        } else return BuildingMapper.toBuildingTO(buildingDao.findBuildingByLocalization(localization));
-    }
-
-    @Override
-    public Double numberOfApartmentsInSpecifiedBuildingWithSpecifiedStatus(Long buildingId, String status) {
+    public Double numberOfApartmentsInSpecifiedBuildingWithSpecifiedStatus(Long buildingId, String status) throws NoSuchApartmentException, NoSuchBuildingException {
         Optional<BuildingEntity> optionalEntityToDelete = buildingDao.findById(buildingId);
         Double numberOfApartments;
         if (optionalEntityToDelete.isPresent()) {
@@ -86,10 +87,30 @@ public class BuildingServiceImpl implements BuildingService {
         return numberOfApartments;
     }
 
+    /**
+     * Find average price of apartment in specified building
+     *
+     * @param buildingId building id
+     * @return Average apartment price
+     * @throws NoSuchBuildingException if building does not exist
+     */
     @Override
-    public Double averagePriceOfApartmentsInSpecifiedBuilding(Long buildingId) {
+    public Double averagePriceOfApartmentsInSpecifiedBuilding(Long buildingId) throws NoSuchBuildingException {
         BuildingEntity buildingEntity = buildingDao.findById(buildingId).orElseThrow(NoSuchBuildingException::new);
         Double averageBuildingPrice = buildingDao.averagePriceOfApartmentsInSpecifiedBuilding(buildingId);
         return averageBuildingPrice;
+    }
+
+    /**
+     * Find building with most free apartments
+     * @return List of buildings with most free apartments
+     * @throws NoSuchBuildingException if there are no free apartments in any building
+     */
+    @Override
+    public List<BuildingTO> findBuildingWithMostFreeApartments() throws NoSuchBuildingException {
+        List<BuildingEntity> buildingEntityList = buildingDao.findBuildingWithMostFreeApartments();
+        if (buildingEntityList.isEmpty() || buildingEntityList == null)
+            throw new NoSuchBuildingException("There are no free apartments in any building");
+        return BuildingMapper.map2TOs(buildingEntityList);
     }
 }

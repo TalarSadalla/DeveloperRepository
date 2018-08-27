@@ -1,6 +1,8 @@
 package com.capgemini.service;
 
 
+import com.capgemini.exceptions.NoSuchApartmentException;
+import com.capgemini.exceptions.NoSuchBuildingException;
 import com.capgemini.exceptions.NoSuchClientException;
 import com.capgemini.exceptions.ReservationException;
 import com.capgemini.types.ApartmentTO;
@@ -128,7 +130,7 @@ public class ClientServiceTest {
 
     @Test(expected = NoSuchClientException.class)
     @Transactional
-    public void shouldDeleteClient() {
+    public void shouldDeleteClient() throws NoSuchClientException {
 
         //given
         ApartmentTO apartmentTO = new ApartmentTOBuilder()
@@ -168,7 +170,7 @@ public class ClientServiceTest {
 
     @Test
     @Transactional
-    public void shouldFindClientById() {
+    public void shouldFindClientById() throws NoSuchClientException {
 
         //given
         ApartmentTO apartmentTO = new ApartmentTOBuilder()
@@ -222,7 +224,7 @@ public class ClientServiceTest {
 
     @Test
     @Transactional
-    public void shouldBuyApartmentByClient() {
+    public void shouldBuyApartmentByClient() throws NoSuchBuildingException, NoSuchApartmentException, NoSuchClientException {
 
         //given
         List<Long> apartmentTOSet = new ArrayList<>();
@@ -358,7 +360,7 @@ public class ClientServiceTest {
 
     @Test
     @Transactional
-    public void shouldMakeReservationApartmentByClient() {
+    public void shouldMakeReservationApartmentByClient() throws NoSuchBuildingException, ReservationException, NoSuchClientException, NoSuchApartmentException {
 
         //given
         List<Long> apartmentTOSet = new ArrayList<>();
@@ -493,7 +495,7 @@ public class ClientServiceTest {
 
     @Test(expected = ReservationException.class)
     @Transactional
-    public void shouldMakeReservationApartmentByClientException() {
+    public void shouldMakeReservationApartmentByClientException() throws NoSuchBuildingException, ReservationException, NoSuchClientException, NoSuchApartmentException {
 
         //given
         List<Long> apartmentTOSet = new ArrayList<>();
@@ -629,7 +631,7 @@ public class ClientServiceTest {
 
     @Test
     @Transactional
-    public void shouldMakeReservationApartmentByMultipleClients() {
+    public void shouldMakeReservationApartmentByMultipleClients() throws NoSuchBuildingException, ReservationException, NoSuchClientException, NoSuchApartmentException {
 
         //given
         List<Long> apartmentTOSet = new ArrayList<>();
@@ -766,7 +768,7 @@ public class ClientServiceTest {
 
     @Test
     @Transactional
-    public void shouldCountApartmentPriceBoughtByClient() {
+    public void shouldCountApartmentPriceBoughtByClient() throws NoSuchBuildingException, NoSuchClientException {
 
         //given
         List<Long> apartmentTOSet = new ArrayList<>();
@@ -906,7 +908,7 @@ public class ClientServiceTest {
 
     @Test
     @Transactional
-    public void shouldFindClientsThatBoughtMoreThanOneApartment() {
+    public void shouldFindClientsThatBoughtMoreThanOneApartment() throws NoSuchBuildingException {
 
         //given
         List<Long> apartmentTOSet = new ArrayList<>();

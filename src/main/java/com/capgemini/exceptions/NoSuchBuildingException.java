@@ -1,6 +1,9 @@
 package com.capgemini.exceptions;
 
-public class NoSuchBuildingException extends RuntimeException {
+/**
+ * Custom Building exception if the Building does not exist
+ */
+public class NoSuchBuildingException extends Exception {
     public NoSuchBuildingException() {
 
     }

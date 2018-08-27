@@ -47,14 +47,14 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void deleteClient(ClientTO clientTO) {
+    public void deleteClient(ClientTO clientTO) throws NoSuchClientException {
         Optional<ClientEntity> optionalEntityToDelete = clientDao.findById(clientTO.getId());
         if (optionalEntityToDelete.isPresent()) clientDao.delete(ClientMapper.toClientEntity(clientTO));
         else throw new NoSuchClientException("No such client with this id");
     }
 
     @Override
-    public ClientTO findClientById(Long id) {
+    public ClientTO findClientById(Long id) throws NoSuchClientException {
         Optional<ClientEntity> optionalClientEntity = clientDao.findById(id);
         if (optionalClientEntity.isPresent()) {
             return ClientMapper.toClientTO(optionalClientEntity.get());
@@ -69,8 +69,17 @@ public class ClientServiceImpl implements ClientService {
         return ClientMapper.map2TOs(listOFClients);
     }
 
+    /**
+     * Buy apartment by Client
+     *
+     * @param clientTO    Client that will buy apartment
+     * @param apartmentTO apartment to be bought
+     * @return Client that bought apartment
+     * @throws NoSuchClientException    if Client does not exist
+     * @throws NoSuchApartmentException if Apartment does not exist
+     */
     @Override
-    public ClientTO buyApartment(ClientTO clientTO, ApartmentTO apartmentTO) {
+    public ClientTO buyApartment(ClientTO clientTO, ApartmentTO apartmentTO) throws NoSuchClientException, NoSuchApartmentException {
         ApartmentEntity apartmentEntity = apartmentDao.findById(apartmentTO.getId())
                 .orElseThrow(NoSuchApartmentException::new);
         ClientEntity clientEntity = clientDao.findById(clientTO.getId())
@@ -88,8 +97,18 @@ public class ClientServiceImpl implements ClientService {
         return ClientMapper.toClientTO(clientEntity);
     }
 
+    /**
+     * Make apartment reservation by Client
+     *
+     * @param clientTO    Client that will buy apartment
+     * @param apartmentTO apartment to be bought
+     * @return Client that bought apartment
+     * @throws ReservationException     if Client has more than 3 reservations
+     * @throws NoSuchApartmentException if Apartment does not exist
+     * @throws NoSuchClientException    if Client does not exist
+     */
     @Override
-    public ClientTO makeApartmentReservation(ClientTO clientTO, ApartmentTO apartmentTO) {
+    public ClientTO makeApartmentReservation(ClientTO clientTO, ApartmentTO apartmentTO) throws ReservationException, NoSuchApartmentException, NoSuchClientException {
 
         ApartmentEntity apartmentEntity = apartmentDao.findById(apartmentTO.getId())
                 .orElseThrow(NoSuchApartmentException::new);
@@ -110,8 +129,13 @@ public class ClientServiceImpl implements ClientService {
         return ClientMapper.toClientTO(clientEntity);
     }
 
+    /**
+     * Find sum of apartments price that are bought by specified Client
+     * @param clientId client Id
+     * @return Sum of apartments price
+     */
     @Override
-    public Double sumOfBoughtApartmentsPriceForSpecifiedClient(Long clientId) {
+    public Double sumOfBoughtApartmentsPriceForSpecifiedClient(Long clientId) throws NoSuchClientException {
         ClientEntity clientEntity = clientDao.findById(clientId).orElseThrow(NoSuchClientException::new);
         Double apartmentsPrice = clientDao.sumOfBoughtApartmentsPriceForSpecifiedCLient(clientEntity.getId(), "BOUGHT");
         if (apartmentsPrice == null)
@@ -119,6 +143,10 @@ public class ClientServiceImpl implements ClientService {
         return apartmentsPrice;
     }
 
+    /**
+     * Find clients that bought more than one apartment
+     * @return List of Clients that bought more than one apartment
+     */
     @Override
     public List<ClientTO> clientsThatBoughtMoreThanOneApartment() {
         List<ClientEntity> clientEntities = clientDao.clientsThatBoughtMoreThanOneApartment();
@@ -126,6 +154,11 @@ public class ClientServiceImpl implements ClientService {
         return ClientMapper.map2TOs(clientEntities);
     }
 
+    /**
+     * Get list of apartments owned by Client
+     * @param clientTO client transfer object
+     * @return List of Apartments owned by client
+     */
     private List<ApartmentEntity> getListOfApartments(ClientTO clientTO) {
         List<Long> listOfApartmentsId = clientTO.getApartmentIdSet();
         List<ApartmentEntity> apartmentsEntityList = new ArrayList<>();
@@ -135,7 +168,12 @@ public class ClientServiceImpl implements ClientService {
         return apartmentsEntityList;
     }
 
-    public void validateReservation(ClientEntity clientEntity) {
+    /**
+     * Validate if client can make a reservation
+     * @param clientEntity
+     * @throws ReservationException if Client has more thant 3 reservations
+     */
+    public void validateReservation(ClientEntity clientEntity) throws ReservationException {
         List<ApartmentEntity> apartmentEntityList = clientEntity.getApartmentEntitySet()
                 .stream().filter(apartment -> apartment.getStatus().toUpperCase().equals("RESERVATION"))
                 .collect(Collectors.toList());
